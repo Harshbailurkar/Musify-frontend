@@ -60,3 +60,28 @@ export async function deletePlaylist(playlistId) {
     }
   }
 }
+export async function updatePlaylist(playlistId, playlistName) {
+  try {
+    const response = await axiosInstance.patch(
+      `/playlists/update/${playlistId}`,
+      {
+        name: playlistName,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 401) {
+      throw new Error("Login required");
+    } else if (error.response.status === 402) {
+      throw new Error(402, "Playlist with name already exists");
+    } else if (error.response.status === 400) {
+      throw new Error("Playlist Name is required");
+    } else if (error.response) {
+      throw new Error(
+        error.response.data.message || "Network response was not ok"
+      );
+    } else {
+      throw new Error("Network request failed");
+    }
+  }
+}
