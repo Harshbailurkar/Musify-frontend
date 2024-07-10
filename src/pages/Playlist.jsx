@@ -1,6 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { HiOutlinePlus, HiOutlineTrash, HiOutlinePencil } from "react-icons/hi";
+import {
+  HiOutlinePlus,
+  HiOutlineTrash,
+  HiOutlinePencil,
+  HiChevronDown,
+  HiChevronUp,
+  HiOutlineDotsHorizontal,
+  HiOutlineSortAscending,
+  HiOutlineSortDescending,
+} from "react-icons/hi";
 import { IoIosShareAlt } from "react-icons/io";
 import swal from "sweetalert";
 import {
@@ -8,6 +17,9 @@ import {
   createPlaylist,
   deletePlaylist,
   updatePlaylist,
+  removeSongFromPlaylist,
+  moveSongToTopInPlaylist,
+  moveSongToBottomInPlaylist,
 } from "../API/playlistAPI";
 
 export default function Playlist() {
@@ -22,6 +34,7 @@ export default function Playlist() {
   const [updatePlaylistName, setUpdatePlaylistName] = useState("");
   const [showPlayListUpdateForm, setShowPlayListUpdateForm] = useState(false);
   const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
+  const [showEditTooltip, setShowEditTooltip] = useState(null);
 
   const fetchPlaylists = async () => {
     try {
@@ -160,7 +173,7 @@ export default function Playlist() {
   };
 
   const handleSharePlaylist = (playlistId) => {
-    alert("http://localhost:8000/api/v1/playlists/user/" + playlistId);
+    alert(`http://localhost:8000/api/v1/playlists/user/${playlistId}`);
   };
 
   const handleUpdatePlaylist = async (playlistId) => {
@@ -187,7 +200,46 @@ export default function Playlist() {
       }
     }
   };
+  const handlePlayListSongOptions = (songId) => {
+    setShowEditTooltip(showEditTooltip === songId ? null : songId);
+  };
+  const handleRemoveSongFromPlaylist = (PlaylistId, SongId) => {
+    try {
+      removeSongFromPlaylist(PlaylistId, SongId).then((response) => {
+        if (response.statusCode === 200) {
+          fetchPlaylists();
+        }
+      });
+    } catch (err) {
+      alert(error);
+    }
+  };
+  const moveSongToTop = async (playlistId, songId) => {
+    try {
+      const response = await moveSongToTopInPlaylist(playlistId, songId);
+      if (response.statusCode === 200) {
+        fetchPlaylists();
+      } else {
+        console.error("Failed to move song to top:", response.error);
+      }
+    } catch (err) {
+      console.error("Failed to move song to top:", err);
+    }
+  };
 
+  const moveSongToBottom = async (playlistId, songId) => {
+    try {
+      const response = await moveSongToBottomInPlaylist(playlistId, songId);
+      if (response.statusCode === 200) {
+        // Song moved to bottom successfully, update playlists
+        fetchPlaylists();
+      } else {
+        console.error("Failed to move song to bottom:", response.error);
+      }
+    } catch (err) {
+      console.error("Failed to move song to bottom:", err);
+    }
+  };
   if (error === "Login required") {
     navigate("/login");
     return null;
@@ -261,10 +313,22 @@ export default function Playlist() {
             <div
               key={playlist._id}
               className="text-white px-10 p-5 border border-gray-700 rounded mb-2 cursor-pointer"
-              onClick={() => handlePlaylistClick(playlist._id)}
             >
-              <span className="flex items-center justify-between">
-                <span>{playlist.name}</span>
+              <span
+                className="flex items-center justify-between"
+                onClick={() => handlePlaylistClick(playlist._id)}
+              >
+                <span className="text-lg flex items-center">
+                  <span className="pr-4">
+                    {expandedPlaylist === playlist._id ? (
+                      <HiChevronUp />
+                    ) : (
+                      <HiChevronDown />
+                    )}
+                  </span>
+
+                  {playlist.name}
+                </span>
                 <div className="flex space-x-2">
                   <span
                     className="hover:bg-musify-dark py-2 rounded cursor-pointer hover:border hover:border-gray-600  text-gray-400 hover:text-white"
@@ -307,13 +371,82 @@ export default function Playlist() {
                     </span>
                   ) : (
                     playlist.songs.map((song) => (
-                      <div key={song._id} className="flex items-center mb-2">
-                        <img
-                          src={song.ThumbnailUrl}
-                          alt={song.title}
-                          className="w-12 h-12 mr-4"
-                        />
-                        <span>{song.title}</span>
+                      <div className="flex flex-col">
+                        <div
+                          key={song._id}
+                          className="flex items-center justify-between relative "
+                        >
+                          <span className="flex items-center  ">
+                            <img
+                              src={song.ThumbnailUrl}
+                              alt={song.title}
+                              className="w-12 h-12 mr-4"
+                            />
+                            <span>{song.title}</span>
+                          </span>
+                          <div
+                            className="mr-10"
+                            onClick={() => handlePlayListSongOptions(song._id)}
+                          >
+                            <HiOutlineDotsHorizontal size={20} />
+                            {showEditTooltip === song._id && (
+                              <div className="absolute top-10 right-0 mt-2 w-40 bg-musify-dark text-white p-2 rounded shadow-lg z-10 border border-gray-600 ">
+                                <button
+                                  className="w-full text-left p-1 border hover:bg-neutral-950  border-b-gray-600 border-x-0 border-t-0"
+                                  onClick={() =>
+                                    handleRemoveSongFromPlaylist(
+                                      playlist._id,
+                                      song._id
+                                    )
+                                  }
+                                >
+                                  <span className="flex items-center">
+                                    <HiOutlineTrash
+                                      size={20}
+                                      className="mx-2"
+                                    />
+                                    <p> Remove</p>
+                                  </span>
+                                </button>
+                                <button
+                                  className="w-full text-left p-1 hover:bg-neutral-950  border border-b-gray-600 border-x-0 border-t-0"
+                                  onClick={() =>
+                                    moveSongToTop(playlist._id, song._id)
+                                  }
+                                >
+                                  <span className="flex items-center">
+                                    <HiOutlineSortAscending
+                                      className="mx-2"
+                                      size={20}
+                                    />
+                                    <p>Move to top</p>
+                                  </span>
+                                </button>
+                                <button
+                                  className="w-full text-left p-1 hover:bg-neutral-950 border border-b-gray-600 border-x-0 border-t-0"
+                                  onClick={() =>
+                                    moveSongToBottom(playlist._id, song._id)
+                                  }
+                                >
+                                  <span className="flex items-center">
+                                    <HiOutlineSortDescending
+                                      className="mx-2"
+                                      size={20}
+                                    />
+                                    <p> Move to Last</p>
+                                  </span>
+                                </button>
+                                <button
+                                  className="w-full text-center p-1 hover:bg-neutral-950 "
+                                  onClick={() => setShowEditTooltip(false)}
+                                >
+                                  close
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="border-b border-b-slate-600 w-full my-2"></div>
                       </div>
                     ))
                   )}
@@ -323,6 +456,7 @@ export default function Playlist() {
           ))}
         </div>
       )}
+
       {showPlayListUpdateForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="p-8 bg-musify-dark text-white border border-gray-800 rounded shadow-lg w-1/3">

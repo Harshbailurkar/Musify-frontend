@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { getAllListenLaterSong } from "../API/listenLaterAPI";
+import {
+  getAllListenLaterSong,
+  removeSongToListenLater,
+} from "../API/listenLaterAPI";
 import ListenLaterGroup from "../assets/images/ListenLaterGroup.svg";
 import NotFound from "../assets/images/NotFound.png";
 import { useNavigate } from "react-router-dom";
+import { CiSquareRemove } from "react-icons/ci";
 
 export default function ListenLater() {
   const navigate = useNavigate();
   const [listenLaterSongs, setListenLaterSongs] = useState([]);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
-  useEffect(() => {
+  const getSongs = () => {
     getAllListenLaterSong()
       .then((data) => {
         setListenLaterSongs(data.data);
@@ -18,8 +23,26 @@ export default function ListenLater() {
         setError(error.message);
         console.log("Error from our side! Please refresh.");
       });
+  };
+  useEffect(() => {
+    getSongs();
   }, []);
 
+  const handleRemoveSong = async (songId) => {
+    try {
+      await removeSongToListenLater(songId).then(() => {
+        setSuccessMessage("Song removed from Listen Later");
+        getSongs();
+      });
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  setTimeout(() => {
+    setSuccessMessage(null);
+    setError(null);
+  }, 4000);
   if (error == "Login required") {
     navigate("/login");
   } else if (error) {
@@ -29,8 +52,18 @@ export default function ListenLater() {
   }
 
   return (
-    <div className="mt-28 ml-16 text-white">
-      <div className="flex">
+    <div className=" text-white">
+      {error && error !== "No Songs are availabe" && (
+        <h1 className="text-red-500">{error}</h1>
+      )}
+      {successMessage && (
+        <div className="progress-bar-wrapper text-center bg-green-500 brightness-75  ">
+          <h1 className="text-neutral-900">{successMessage}</h1>
+          <div className="progress-bar" />
+        </div>
+      )}
+      {/* Listen Later Hero*/}
+      <div className="flex mt-28 ml-16">
         <img src={ListenLaterGroup} alt="" className="w-44 h-44" />
         <span className="flex flex-col">
           <h1 className="text-6xl pl-20 font-bold">Listen Later</h1>
@@ -51,7 +84,7 @@ export default function ListenLater() {
             {listenLaterSongs.flat().map((song) => (
               <div
                 key={song._id}
-                className="bg-musify-dark p-4 flex rounded shadow-md items-center justify-between relative"
+                className="bg-musify-dark p-4 flex items-center justify-between rounded shadow-md relative"
               >
                 <div className="flex items-center">
                   <img
@@ -60,15 +93,15 @@ export default function ListenLater() {
                     className="w-10 h-10 rounded-md mx-2"
                   />
                   <h3 className="text-lg font-semibold pl-10">{song.title}</h3>
-                  {
-                    // <button
-                    //   onClick={() => toggleLike(song._id)}
-                    //   className="ml-4 text-red-500"
-                    // >
-                    //   {likeStaus ? <FaHeart /> : <FaRegHeart />}
-                    // </button>
-                  }
                 </div>
+                <button
+                  className="ml-4 text-red-500 mr-10"
+                  onClick={() => {
+                    handleRemoveSong(song._id);
+                  }}
+                >
+                  <CiSquareRemove size={22} />
+                </button>
               </div>
             ))}
           </div>

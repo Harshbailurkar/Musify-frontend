@@ -84,3 +84,69 @@
   background-color: rgb(21, 21, 21) !important;
   color: white !important;
 }
+html {
+  scroll-behavior: smooth;
+}
+.progress-bar-wrapper {
+  position: relative;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background-color: #313131;
+  animation: progressAnimation 2s linear;
+}
+
+@keyframes progressAnimation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+body {
+  font-family: "Poppins", "Montserrat", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Example class for applying font to specific elements */
+.spotify-font {
+  font-family: "Poppins", "Montserrat", sans-serif;
+}
+
+.sliding-container {
+  width: 200px; /* Adjust as needed */
+  overflow: hidden; /* Hide overflowing content */
+}
+
+.sliding-text {
+  display: inline-block; /* Make text display inline */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.sliding .sliding-text {
+  animation: slide 15s linear infinite; /* Slide animation */
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  } /* Start from the beginning */
+  100% {
+    transform: translateX(-100%);
+  } /* Slide to the left */
+}

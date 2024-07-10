@@ -15,6 +15,7 @@ export default function Favorite() {
     getAllLikedSong()
       .then((data) => {
         setSongs(data.data);
+        setLikedStatus(true);
       })
       .catch((error) => {
         setError(error.message);
@@ -23,10 +24,8 @@ export default function Favorite() {
   }, [likeStaus]);
 
   function toggleLike(id) {
-    console.log(id);
     toggleLikeSong(id)
-      .then((data) => {
-        console.log(data.data);
+      .then(() => {
         setLikedStatus((pre) => !pre);
       })
       .catch((error) => {

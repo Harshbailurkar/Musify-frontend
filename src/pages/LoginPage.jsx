@@ -2,7 +2,7 @@ import React from "react";
 import { loginUser } from "../API/userAPI.js";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-
+import Logo from "../assets/images/Logo.svg";
 export default function LoginPage() {
   const [loginData, setLoginData] = React.useState({
     usernameOremail: "",
@@ -39,9 +39,12 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center self-center ">
-      <div className="items-center text-center mt-40">
+      <div className="items-center text-center mt-24">
+        <div className="w-auto">
+          <img src={Logo} alt="Musify" className="w-full" />
+        </div>
         <h1 className="text-4xl font-bold pb-9 text-white">Login</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="form">
           <div className="flex flex-col">
             <input
               type="text"

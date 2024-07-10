@@ -1,4 +1,3 @@
-// userAPI.js
 import axiosInstance from "./axiosConfig";
 
 export const loginUser = async (loginData) => {
@@ -105,5 +104,42 @@ export async function getFollowedAccounts() {
     throw error.response
       ? error.response.data
       : new Error("Failed to get followed channels");
+  }
+}
+
+export async function updateUserInfo(userInfo) {
+  try {
+    const response = await axiosInstance.patch(
+      "/users/update-account",
+      userInfo
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error("Failed to update");
+  }
+}
+export async function updateAvatar(avatar) {
+  const formData = new FormData();
+  formData.append("avatar", avatar);
+
+  try {
+    const response = await axiosInstance.patch(
+      "/users/change-avatar",
+      formData
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error("Failed to update");
+  }
+}
+export async function updatePassword(passwordData) {
+  try {
+    const response = await axiosInstance.post(
+      "/users/change-password",
+      passwordData
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error("Failed to update");
   }
 }

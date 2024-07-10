@@ -102,8 +102,11 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
                   to="/"
-                  activeClassName="font-bold"
-                  className="flex flex-row items-center"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
                 >
                   <HiOutlineHome size={22} />
                   {!isCollapsed && (
@@ -114,8 +117,11 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
                   to="/search"
-                  activeClassName="font-bold"
-                  className="flex flex-row items-center"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
                 >
                   <HiSearch size={22} />
                   {!isCollapsed && (
@@ -130,8 +136,11 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
                   to="/favorite"
-                  activeClassName="font-bold"
-                  className="flex flex-row items-center"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
                 >
                   <HiHeart size={22} />
                   {!isCollapsed && (
@@ -144,8 +153,11 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
                   to="/playlist"
-                  activeClassName="font-bold"
-                  className="flex flex-row items-center"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
                 >
                   <HiOutlineFolder size={22} />
                   {!isCollapsed && (
@@ -158,8 +170,11 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
                   to="/listen-later"
-                  activeClassName="font-bold"
-                  className="flex flex-row items-center"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
                 >
                   <HiOutlineSave size={22} />
                   {!isCollapsed && (
@@ -176,8 +191,11 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
                   to="/radio"
-                  activeClassName="font-bold"
-                  className="flex flex-row items-center"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
                 >
                   <MdRadio size={22} />
                   {!isCollapsed && (
@@ -190,7 +208,14 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
           <div className="mt-12 ml-2 relative">
             {getUser && (
               <div className="flex items-center">
-                <NavLink to="/user" activeClassName="font-bold">
+                <NavLink
+                  to="/user"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
+                >
                   <div className="flex items-center">
                     <img
                       src={
