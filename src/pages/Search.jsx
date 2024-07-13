@@ -5,6 +5,8 @@ import { getFollowedAccounts } from "../API/userAPI.js";
 import { searchQuery, getSongById } from "../API/songAPI.js";
 import SongDescription from "../components/SongDescription";
 import { getAllLikedSong } from "../API/favoriteAPI";
+import { useDispatch } from "react-redux";
+import { setMusicData } from "../Redux/Slices/musicData";
 const SearchPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,6 +19,7 @@ const SearchPage = () => {
   const [currentSong, setCurrentSong] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [likedSongs, setLikedSongs] = useState([]);
+  const dispatch = useDispatch();
 
   const fetchFollowedChannels = async () => {
     try {
@@ -123,6 +126,9 @@ const SearchPage = () => {
   const handleSuccessMessage = (message) => {
     setSuccessMessage(message);
   };
+  const handlePlaySong = (url, title, uploadedBy, thumbnail) => {
+    dispatch(setMusicData({ url, title, uploadedBy, thumbnail })); // corrected parameter name id to title
+  };
 
   if (error === "Login required") {
     navigate("/login");
@@ -198,7 +204,15 @@ const SearchPage = () => {
                 <li
                   key={result._id}
                   className="border-b border-gray-700 p-2 flex items-center"
-                  onClick={() => handleShowDescriptionOfSong(result._id)}
+                  onClick={() => {
+                    handlePlaySong(
+                      result.songUrl,
+                      result.title,
+                      result.owner,
+                      result.ThumbnailUrl
+                    );
+                    handleShowDescriptionOfSong(result._id);
+                  }}
                 >
                   <img
                     src={result.ThumbnailUrl}

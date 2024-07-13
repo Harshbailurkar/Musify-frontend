@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 
-// Create a context for the music player
 const MusicPlayerContext = React.createContext();
 
 export const useMusicPlayer = () => {

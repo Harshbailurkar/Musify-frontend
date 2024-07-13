@@ -21,6 +21,8 @@ import {
   moveSongToTopInPlaylist,
   moveSongToBottomInPlaylist,
 } from "../API/playlistAPI";
+import { useDispatch } from "react-redux";
+import { setMusicData } from "../Redux/Slices/musicData";
 
 export default function Playlist() {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ export default function Playlist() {
   const [showPlayListUpdateForm, setShowPlayListUpdateForm] = useState(false);
   const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
   const [showEditTooltip, setShowEditTooltip] = useState(null);
+  const dispatch = useDispatch();
 
   const fetchPlaylists = async () => {
     try {
@@ -238,6 +241,9 @@ export default function Playlist() {
       console.error("Failed to move song to bottom:", err);
     }
   };
+  const handlePlaySong = (url, title, uploadedBy, thumbnail) => {
+    dispatch(setMusicData({ url, title, uploadedBy, thumbnail })); // corrected parameter name id to title
+  };
   if (error === "Login required") {
     navigate("/login");
     return null;
@@ -373,6 +379,14 @@ export default function Playlist() {
                         <div
                           key={song._id}
                           className="flex items-center justify-between relative "
+                          onClick={() =>
+                            handlePlaySong(
+                              song.songUrl,
+                              song.title,
+                              song.owner,
+                              song.ThumbnailUrl
+                            )
+                          }
                         >
                           <span className="flex items-center  ">
                             <img

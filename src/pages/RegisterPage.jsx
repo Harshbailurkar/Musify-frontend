@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [status, setStatus] = React.useState("idle");
   const navigate = useNavigate();
 
+  localStorage.setItem("loggedIn", false);
   function validateInput() {
     const { username, password } = registerData;
     const usernameRegex = /^[a-zA-Z0-9_]+$/;

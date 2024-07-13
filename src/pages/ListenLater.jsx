@@ -7,12 +7,15 @@ import ListenLaterGroup from "../assets/images/ListenLaterGroup.svg";
 import NotFound from "../assets/images/NotFound.png";
 import { useNavigate } from "react-router-dom";
 import { CiSquareRemove } from "react-icons/ci";
+import { useDispatch } from "react-redux";
+import { setMusicData } from "../Redux/Slices/musicData";
 
 export default function ListenLater() {
   const navigate = useNavigate();
   const [listenLaterSongs, setListenLaterSongs] = useState([]);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const dispatch = useDispatch();
 
   const getSongs = () => {
     getAllListenLaterSong()
@@ -37,6 +40,9 @@ export default function ListenLater() {
     } catch (error) {
       setError(error.message);
     }
+  };
+  const handlePlaySong = (url, title, uploadedBy, thumbnail) => {
+    dispatch(setMusicData({ url, title, uploadedBy, thumbnail })); // corrected parameter name id to title
   };
 
   setTimeout(() => {
@@ -85,6 +91,14 @@ export default function ListenLater() {
               <div
                 key={song._id}
                 className="border border-gray-700 p-4 flex items-center justify-between rounded shadow-md relative"
+                onClick={() =>
+                  handlePlaySong(
+                    song.songUrl,
+                    song.title,
+                    song.owner,
+                    song.ThumbnailUrl
+                  )
+                }
               >
                 <div className="flex items-center">
                   <img

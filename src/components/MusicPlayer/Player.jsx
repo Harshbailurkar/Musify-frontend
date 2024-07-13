@@ -1,48 +1,41 @@
-/* eslint-disable jsx-a11y/media-has-caption */
-import React, { useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 
 const Player = ({
+  audioRef,
   activeSong,
-  isPlaying,
   volume,
+  isPlaying,
   seekTime,
+  repeat,
   onEnded,
   onTimeUpdate,
   onLoadedData,
-  repeat,
 }) => {
-  const ref = useRef(null);
-
   useEffect(() => {
-    if (ref.current) {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
       if (isPlaying) {
-        ref.current.play();
+        audioRef.current.play();
       } else {
-        ref.current.pause();
+        audioRef.current.pause();
       }
     }
-  }, [isPlaying]);
+  }, [volume, isPlaying, activeSong]);
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.volume = volume;
-    }
-  }, [volume]);
-
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.currentTime = seekTime;
+    if (audioRef.current) {
+      audioRef.current.currentTime = seekTime;
     }
   }, [seekTime]);
 
   return (
     <audio
-      src={activeSong?.uri}
-      ref={ref}
-      loop={repeat}
+      ref={audioRef}
+      src={activeSong.url}
       onEnded={onEnded}
       onTimeUpdate={onTimeUpdate}
       onLoadedData={onLoadedData}
+      loop={repeat}
     />
   );
 };

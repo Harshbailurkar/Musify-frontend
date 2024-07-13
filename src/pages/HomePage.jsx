@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { category } from "../assets/constant";
 import SongDescription from "../components/SongDescription";
 import { getAllLikedSong } from "../API/favoriteAPI";
+import Logo from "../assets/images/Logo.svg";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const HomePage = () => {
   const [currentSong, setCurrentSong] = useState(null);
   const [likedSongs, setLikedSongs] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isLoading, setLoading] = useState(true); // State to track loading state
 
   /* Fetch all songs */
   useEffect(() => {
@@ -23,14 +25,16 @@ const HomePage = () => {
       try {
         const data = await getAllSongs(page);
         setSongs(data.data);
-        localStorage.setItem("loggedIn", true);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
         setError(error.message);
+        setLoading(false); // Set loading to false on error
       }
     };
 
     fetchSongs();
   }, [page]);
+
   /* Fetch all liked songs */
   useEffect(() => {
     getAllLikedSong()
@@ -43,9 +47,6 @@ const HomePage = () => {
       });
   }, [showDescriptionOfSong]);
 
-  const handlePlaySong = (id, url) => {
-    alert("Playing song with id: " + id + "and url: " + url);
-  };
   const handleSuccessMessage = (message) => {
     setSuccessMessage(message);
   };
@@ -86,18 +87,31 @@ const HomePage = () => {
       <div className="error text-red-500 text-4xl text-center">{error}</div>
     );
   }
+
   setTimeout(() => {
     setSuccessMessage(null);
   }, 5000);
 
   return (
     <div className="flex flex-col flex-1 relative">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="animate-pulse max-w-3/4"
+            style={{ width: "50%", height: "auto" }}
+          />
+        </div>
+      )}
+
       {successMessage && (
-        <div className="progress-bar-wrapper text-center  bg-green-500 brightness-75  ">
+        <div className="progress-bar-wrapper text-center bg-green-500 brightness-75">
           <h1 className="text-neutral-900">{successMessage}</h1>
           <div className="progress-bar" />
         </div>
       )}
+
       {/* Hero section */}
       <div className="hero-section text-white py-16 px-4 text-center">
         <h2 className="font-bold text-6xl mb-4">Your Music Playground</h2>
@@ -109,7 +123,7 @@ const HomePage = () => {
         {category.map((items) => (
           <div
             key={items.name}
-            className="text-white border border-yellow-800 rounded flex  m-2 p-2 px-4 "
+            className="text-white border border-yellow-800 rounded flex m-2 p-2 px-4"
           >
             <a href={`#${items.name}`}>
               <p>{items.name}</p>
@@ -118,7 +132,7 @@ const HomePage = () => {
         ))}
       </div>
 
-      <h1 className="Trending text-2xl text-white font-semibold pt-10 pl-10 ">
+      <h1 className="Trending text-2xl text-white font-semibold pt-10 pl-10">
         Most Popular
       </h1>
 
@@ -134,7 +148,6 @@ const HomePage = () => {
             uploadedBy={song.owner}
             likes={song.likesCount}
             url={song.songUrl}
-            handlePlaySong={handlePlaySong}
             handleShowDescriptionOfSong={() =>
               handleShowDescriptionOfSong(song._id)
             }

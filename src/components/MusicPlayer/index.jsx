@@ -4,49 +4,45 @@ import Player from "./Player";
 import Seekbar from "./Seekbar";
 import Track from "./Track";
 import VolumeBar from "./VolumeBar";
-
-// Dummy data for testing purposes
-const dummySongs = [
-  {
-    id: 1,
-    title: "Song 1",
-    subtitle: "Artist 1",
-    uri: "http://res.cloudinary.com/dya4fdqnr/video/upload/v1719423201/wj6uxlkxjoh68qcpdahr.mp4",
-    coverart:
-      "https://res.cloudinary.com/dya4fdqnr/image/upload/v1719423202/lxzjhd7ulvxftax6ouir.jpg",
-  },
-  {
-    id: 2,
-    title: "Song 2",
-    subtitle: "Artist 2",
-    uri: "http://res.cloudinary.com/dya4fdqnr/video/upload/v1719423201/wj6uxlkxjoh68qcpdahr.mp4",
-    coverart:
-      "https://res.cloudinary.com/dya4fdqnr/image/upload/v1719423202/lxzjhd7ulvxftax6ouir.jpg",
-  },
-  // Add more songs as needed
-];
+import { useSelector } from "react-redux";
 
 const MusicPlayer = () => {
-  const [currentSongs, setCurrentSongs] = useState(dummySongs);
+  const songObject = useSelector((state) => state.musicData);
+  const [currentSongs, setCurrentSongs] = useState([songObject]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [activeSong, setActiveSong] = useState(dummySongs[0]);
+  const [activeSong, setActiveSong] = useState(songObject);
   const [duration, setDuration] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [appTime, setAppTime] = useState(0);
   const [volume, setVolume] = useState(0.3);
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
+  const audioRef = useRef(null); // Ref for the audio element
+
+  const collapse = localStorage.getItem("isSidebarCollapsed");
+
+  // Effect to handle songObject change
+  useEffect(() => {
+    const songData = [songObject];
+    setCurrentSongs(songData);
+    setCurrentIndex(0);
+    setActiveSong(songObject);
+    setIsActive(true);
+    setIsPlaying(true); // Start playing the new song
+  }, [songObject]);
 
   useEffect(() => {
-    if (currentSongs.length) setIsActive(true);
-  }, [currentIndex]);
+    if (isPlaying && audioRef.current) {
+      audioRef.current.play(); // Play the audio when isPlaying is true
+    }
+  }, [isPlaying, activeSong]);
 
   const handlePlayPause = () => {
     if (!isActive) return;
 
-    setIsPlaying(!isPlaying);
+    setIsPlaying((prev) => !prev);
   };
 
   const handleNextSong = () => {
@@ -74,51 +70,54 @@ const MusicPlayer = () => {
   };
 
   return (
-    <div className="relative sm:px-12 px-8 w-full flex items-center justify-between">
-      <Track
-        isPlaying={isPlaying}
-        isActive={isActive}
-        activeSong={activeSong}
-      />
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <Controls
+    <div className="fixed bottom-0 right-0 left-auto w-10/12 z-50 bg-gray-950 text-white p-3">
+      <div className="relative sm:px-12 px-8 w-full flex items-center justify-between">
+        <Track
           isPlaying={isPlaying}
           isActive={isActive}
-          repeat={repeat}
-          setRepeat={setRepeat}
-          shuffle={shuffle}
-          setShuffle={setShuffle}
-          currentSongs={currentSongs}
-          handlePlayPause={handlePlayPause}
-          handlePrevSong={handlePrevSong}
-          handleNextSong={handleNextSong}
-        />
-        <Seekbar
-          value={appTime}
-          min="0"
-          max={duration}
-          onInput={(event) => setSeekTime(event.target.value)}
-          setSeekTime={setSeekTime}
-          appTime={appTime}
-        />
-        <Player
           activeSong={activeSong}
-          volume={volume}
-          isPlaying={isPlaying}
-          seekTime={seekTime}
-          repeat={repeat}
-          onEnded={handleNextSong}
-          onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
-          onLoadedData={(event) => setDuration(event.target.duration)}
+        />
+        <div className="flex-1 flex flex-col items-center justify-center">
+          <Controls
+            isPlaying={isPlaying}
+            isActive={isActive}
+            repeat={repeat}
+            setRepeat={setRepeat}
+            shuffle={shuffle}
+            setShuffle={setShuffle}
+            currentSongs={currentSongs}
+            handlePlayPause={handlePlayPause}
+            handlePrevSong={handlePrevSong}
+            handleNextSong={handleNextSong}
+          />
+          <Seekbar
+            value={appTime}
+            min="0"
+            max={duration}
+            onInput={(event) => setSeekTime(event.target.value)}
+            setSeekTime={setSeekTime}
+            appTime={setAppTime}
+          />
+          <Player
+            audioRef={audioRef} // Pass the audioRef to the Player component
+            activeSong={activeSong}
+            volume={volume}
+            isPlaying={isPlaying}
+            seekTime={seekTime}
+            repeat={repeat}
+            onEnded={handleNextSong}
+            onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
+            onLoadedData={(event) => setDuration(event.target.duration)}
+          />
+        </div>
+        <VolumeBar
+          value={volume}
+          min="0"
+          max="1"
+          onChange={(event) => setVolume(event.target.value)}
+          setVolume={setVolume}
         />
       </div>
-      <VolumeBar
-        value={volume}
-        min="0"
-        max="1"
-        onChange={(event) => setVolume(event.target.value)}
-        setVolume={setVolume}
-      />
     </div>
   );
 };

@@ -80,6 +80,7 @@ export default function UserPage() {
     logoutUser()
       .then(() => {
         navigate("/login");
+        localStorage.setItem("loggedOut", true);
       })
       .catch((error) => {
         setError(error.message || "Logout failed");

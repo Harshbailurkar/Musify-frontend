@@ -4,11 +4,11 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { toggleLikeSong } from "../API/favoriteAPI";
 import { MdOutlineWatchLater, MdOutlinePlaylistAdd } from "react-icons/md";
-import { addSongToListenLater } from "../API/listenLaterAPI";
 import SearchPlaylist from "./SelectPlaylist";
 import { IoShareOutline } from "react-icons/io5";
 import { TbUserShare } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+
 const SongDescription = ({
   id,
   close,
@@ -33,6 +33,7 @@ const SongDescription = ({
   const [showOtherOptions, setShowOtherOptions] = useState(false);
   const searchPlaylistRef = useRef(null); // Ref for SearchPlaylist component
   const navigate = useNavigate();
+
   useEffect(() => {
     setLiked(isLiked);
   }, [title, artist, uploadedBy, isLiked]);
@@ -100,22 +101,18 @@ const SongDescription = ({
     navigate(`/c/${username}`);
   };
 
-  setTimeout(() => {
-    setError(null);
-  }, 4000);
-
   return (
-    <div className="flex h-full">
-      <div className="bg-musify-dark text-white flex flex-col rounded-xl items-center p-6 pb-10 relative">
+    <div className="fixed top-0 right-0 bottom-20 flex items-center justify-center overflow-y-auto z-50 scrollbar scrollbar-thumb-gray-900">
+      <div className="bg-musify-dark text-white flex flex-col rounded-xl items-center p-6 pb-10 relative max-h-full overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center">
+        <div className="flex items-center justify-between w-full">
           <div className={`sliding-container ${isLongTitle ? "sliding" : ""}`}>
             <div className="sliding-text">
               {title} by {artist}
             </div>
           </div>
           <HiOutlineDotsHorizontal
-            className="text-2xl mx-2"
+            className="text-2xl mx-2 cursor-pointer"
             onClick={() => setShowOtherOptions((prev) => !prev)}
           />
           {showOtherOptions && (
@@ -206,13 +203,6 @@ const SongDescription = ({
               </div>
             )}
           </div>
-          <button
-            onClick={togglePlayPause}
-            className="mt-4 flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
-            <span className="ml-2">{isPlaying ? "Pause" : "Play"}</span>
-          </button>
         </div>
       </div>
     </div>

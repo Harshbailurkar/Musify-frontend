@@ -2,6 +2,8 @@ import React from "react";
 import { HiOutlineHeart } from "react-icons/hi";
 import { FaPlay } from "react-icons/fa";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { setMusicData } from "../Redux/Slices/musicData";
 
 const formatLikes = (likes) => {
   if (likes >= 1000000000) {
@@ -22,7 +24,6 @@ const Song = ({
   url,
   uploadedBy,
   likes,
-  handlePlaySong,
   handleShowDescriptionOfSong,
   isLiked,
 }) => {
@@ -30,12 +31,12 @@ const Song = ({
     songName = songName.substring(0, 14) + "...";
   }
 
+  const dispatch = useDispatch();
   const handleClickSongCard = (id) => {
     handleShowDescriptionOfSong();
   };
-  const handlePlayButton = (e, id, url) => {
-    handlePlaySong(id, url);
-    e.stopPropagation();
+  const handlePlayButton = (e, id, url, songName, uploadedBy, thumbnail) => {
+    dispatch(setMusicData({ id, url, songName, uploadedBy, thumbnail }));
   };
 
   return (
@@ -51,7 +52,9 @@ const Song = ({
         />
         <button
           className="absolute bottom-0 right-0  w-12 h-12 m-2 bg-green-500 text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={(e) => handlePlayButton(e, id, url)}
+          onClick={(e) =>
+            handlePlayButton(e, id, url, songName, uploadedBy, thumbnail)
+          }
         >
           <FaPlay />
         </button>

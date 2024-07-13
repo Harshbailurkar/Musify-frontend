@@ -19,6 +19,7 @@ export default function LoginPage() {
     loginUser(loginData)
       .then((data) => {
         setStatus("idle");
+        window.location.reload();
         navigate("/");
       })
       .catch((error) => {
