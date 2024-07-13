@@ -6,7 +6,9 @@ import { toggleLikeSong } from "../API/favoriteAPI";
 import { MdOutlineWatchLater, MdOutlinePlaylistAdd } from "react-icons/md";
 import { addSongToListenLater } from "../API/listenLaterAPI";
 import SearchPlaylist from "./SelectPlaylist";
-
+import { IoShareOutline } from "react-icons/io5";
+import { TbUserShare } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 const SongDescription = ({
   id,
   close,
@@ -28,10 +30,33 @@ const SongDescription = ({
   const audioRef = useRef(new Audio(songUrl));
   const [error, setError] = useState(null);
   const [showAddToPlaylistOption, setShowAddToPlaylistOption] = useState(false);
-
+  const [showOtherOptions, setShowOtherOptions] = useState(false);
+  const searchPlaylistRef = useRef(null); // Ref for SearchPlaylist component
+  const navigate = useNavigate();
   useEffect(() => {
     setLiked(isLiked);
   }, [title, artist, uploadedBy, isLiked]);
+
+  useEffect(() => {
+    // Function to handle clicks outside SearchPlaylist
+    const handleClickOutside = (event) => {
+      if (
+        searchPlaylistRef.current &&
+        !searchPlaylistRef.current.contains(event.target)
+      ) {
+        setShowAddToPlaylistOption(false);
+        setShowOtherOptions(false);
+      }
+    };
+
+    // Adding event listener when component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleLike = async () => {
     try {
@@ -71,6 +96,10 @@ const SongDescription = ({
     setShowAddToPlaylistOption(false);
   };
 
+  const goToUserProfile = (username) => {
+    navigate(`/c/${username}`);
+  };
+
   setTimeout(() => {
     setError(null);
   }, 4000);
@@ -85,7 +114,25 @@ const SongDescription = ({
               {title} by {artist}
             </div>
           </div>
-          <HiOutlineDotsHorizontal className="text-2xl mx-2" />
+          <HiOutlineDotsHorizontal
+            className="text-2xl mx-2"
+            onClick={() => setShowOtherOptions((prev) => !prev)}
+          />
+          {showOtherOptions && (
+            <div className="absolute top-10 right-2 bg-musify-dark text-white p-2 rounded-lg border border-gray-700">
+              <button
+                className="flex items-center text-gray-300 hover:text-white"
+                onClick={() => goToUserProfile(uploadedBy)}
+              >
+                <TbUserShare size={20} className="mx-1" />
+                Go to {uploadedBy}
+              </button>
+              <button className="flex items-center mt-2 text-gray-300 hover:text-white">
+                <IoShareOutline size={20} className="mx-1" />
+                Share
+              </button>
+            </div>
+          )}
           <button
             onClick={close}
             className="absolute top-2 right-2 text-white hover:text-gray-300 focus:outline-none text-2xl pt-1"
@@ -148,12 +195,14 @@ const SongDescription = ({
               </span>
             </button>
             {showAddToPlaylistOption && (
-              <div className="absolute top-full mt-2 w-full  left-[-250px]">
-                <SearchPlaylist
-                  songId={id}
-                  close={handleCloseSelectPlaylist}
-                  success={onSuccess}
-                />
+              <div className="absolute top-full mt-2 w-full left-[-250px]">
+                <div ref={searchPlaylistRef}>
+                  <SearchPlaylist
+                    songId={id}
+                    close={handleCloseSelectPlaylist}
+                    success={onSuccess}
+                  />
+                </div>
               </div>
             )}
           </div>

@@ -13,24 +13,24 @@ export const loginUser = async (loginData) => {
 };
 
 export async function registerUser(registerFormData) {
-  return await fetch(
-    `https://musify-backend-mzce.onrender.com/api/v1/users/register`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(registerFormData),
+  try {
+    const response = await axiosInstance.post(
+      "/users/register",
+      registerFormData
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 500) {
+      throw new Error("Failed to register");
+    } else if (error.response.status === 400) {
+      throw new Error("Username or email already exists");
+    } else if (error.response.status === 402) {
+      throw new Error("please provide all the details");
     }
-  ).then((response) => {
-    console.log(response);
-    if (!response.ok) {
-      throw new Error(
-        "Error while creating your account! please try again later."
-      );
-    }
-    return response.json();
-  });
+    throw error.response
+      ? error.response.data
+      : new Error("Failed to register");
+  }
 }
 
 export async function logoutUser() {

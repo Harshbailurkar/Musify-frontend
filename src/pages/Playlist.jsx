@@ -38,14 +38,12 @@ export default function Playlist() {
 
   const fetchPlaylists = async () => {
     try {
-      const response = await getAllPlaylist();
-      if (response.statusCode === 200) {
-        setPlaylists(response.data); // Assuming response.data is an array of playlists
-      } else {
-        setError("Failed to fetch playlists");
-      }
+      getAllPlaylist()
+        .then((data) => setPlaylists(data.data))
+        .catch((error) => {
+          setError(error.message);
+        });
     } catch (err) {
-      console.error("Failed to fetch playlists:", err);
       setError("Failed to fetch playlists");
     }
   };

@@ -18,10 +18,8 @@ export default function LoginPage() {
 
     loginUser(loginData)
       .then((data) => {
-        console.log(data);
         setStatus("idle");
         navigate("/");
-        window.location.reload(); // Force page reload after navigating
       })
       .catch((error) => {
         setError(error.message || "Login failed");

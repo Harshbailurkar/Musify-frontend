@@ -1,7 +1,7 @@
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Search from "./pages/Search";
 import Playlist from "./pages/Playlist";
@@ -9,6 +9,7 @@ import Favorite from "./pages/Favorite";
 import ListenLater from "./pages/ListenLater";
 import UserPage from "./pages/UserPage";
 import Radio from "./pages/Radio";
+import ArtistProfile from "./pages/ArtistProfile";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/listen-later" element={<ListenLater />} />
             <Route path="/radio" element={<Radio />} />
             <Route path="/user" element={<UserPage />} />
+            <Route path="/c/:username" element={<ArtistProfile />} />
           </Route>
         </Routes>
       </div>

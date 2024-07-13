@@ -1,18 +1,16 @@
-// Layout.jsx
-
 import React, { useState, useEffect } from "react";
 import Footer from "./Footer";
 import SideBar from "./SideBar";
+import MusicPlayer from "./MusicPlayer/index"; // Adjust the import path as necessary
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
-  // Retrieve the initial collapsed state from localStorage or default to false
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const savedState = localStorage.getItem("isSidebarCollapsed");
     return savedState ? JSON.parse(savedState) : false;
   });
+  const loggedIn = localStorage.getItem("loggedIn");
 
-  // Save the collapsed state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("isSidebarCollapsed", JSON.stringify(isCollapsed));
   }, [isCollapsed]);
@@ -26,7 +24,7 @@ const Layout = () => {
       <div className="flex flex-1 overflow-hidden">
         <SideBar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
         <main
-          className={`flex-1 p-4  overflow-y-auto ${
+          className={`flex-1 p-4 overflow-y-auto ${
             isCollapsed ? "ml-28" : "ml-64"
           }`}
         >
@@ -34,12 +32,24 @@ const Layout = () => {
         </main>
       </div>
       <footer
-        className={`flex-1 p-4 pb-0 pl-1 pr-0 overflow-y-auto ${
+        className={`flex-1 p-4 pb-0 pl-1 pr-0 mb-20 overflow-y-auto ${
           isCollapsed ? "ml-28" : "ml-64"
         }`}
       >
         <Footer />
       </footer>
+      {
+        /* Music Player fixed at the bottom */
+        loggedIn && (
+          <div
+            className={`fixed bottom-0 w-[full-64] ${
+              isCollapsed ? "ml-28" : "ml-64"
+            }`}
+          >
+            <MusicPlayer />
+          </div>
+        )
+      }
     </div>
   );
 };

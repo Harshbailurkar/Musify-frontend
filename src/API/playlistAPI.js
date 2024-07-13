@@ -54,6 +54,28 @@ export async function createPlaylist(playlistName) {
     }
   }
 }
+export async function searchPlaylist(name) {
+  try {
+    const response = await axiosInstance.get(`/playlists/search/`, {
+      params: { name },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 401) {
+      throw new Error("Login required");
+    } else if (error.response.status === 404) {
+      throw new Error("No Playlist Found");
+    } else if (error.response.status === 400) {
+      throw new Error("Playlist Name is required");
+    } else if (error.response) {
+      throw new Error(
+        error.response.data.message || "Network response was not ok"
+      );
+    } else {
+      throw new Error("Network request failed");
+    }
+  }
+}
 
 export async function deletePlaylist(playlistId) {
   try {
@@ -113,7 +135,7 @@ export async function addSongToPlaylist(playlistId, songId) {
       throw new Error("Login required");
     } else if (error.response.status === 404) {
       throw new Error("Playlist or Song not found");
-    } else if (error.response.status === 402) {
+    } else if (error.response.status === 409) {
       throw new Error("Song already exists in playlist");
     } else if (error.response.status === 401) {
       throw new Error("Playlist with name already exists");

@@ -23,6 +23,7 @@ const HomePage = () => {
       try {
         const data = await getAllSongs(page);
         setSongs(data.data);
+        localStorage.setItem("loggedIn", true);
       } catch (error) {
         setError(error.message);
       }
@@ -118,7 +119,7 @@ const HomePage = () => {
       </div>
 
       <h1 className="Trending text-2xl text-white font-semibold pt-10 pl-10 ">
-        Trending Now
+        Most Popular
       </h1>
 
       {/* Songs */}

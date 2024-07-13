@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Channel from "../components/Channel";
 import { getFollowedAccounts } from "../API/userAPI.js";
-import { searchQuery } from "../API/songAPI.js";
+import { searchQuery, getSongById } from "../API/songAPI.js";
+import SongDescription from "../components/SongDescription";
+import { getAllLikedSong } from "../API/favoriteAPI";
 const SearchPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,10 @@ const SearchPage = () => {
   const [results, setResults] = useState(null);
   const [channels, setChannels] = useState([]);
   const [followedChannels, setFollowedChannels] = useState([]);
+  const [showDescriptionOfSong, setShowDescriptionOfSong] = useState(false);
+  const [currentSong, setCurrentSong] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [likedSongs, setLikedSongs] = useState([]);
 
   const fetchFollowedChannels = async () => {
     try {
@@ -20,6 +25,33 @@ const SearchPage = () => {
     } catch (error) {
       console.error("Error fetching followed channels", error);
     }
+  };
+  useEffect(() => {
+    getAllLikedSong()
+      .then((data) => {
+        setLikedSongs(data.data);
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log("Error from our side! Please refresh.");
+      });
+  }, [showDescriptionOfSong]);
+  const handleLikeSong = async (songId) => {
+    try {
+      await toggleLikeSong(songId);
+      const updatedSongs = songs.map((song) =>
+        song._id === songId ? { ...song, isLiked: !song.isLiked } : song
+      );
+      setSongs(updatedSongs);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const isLiked = (songId) => {
+    return likedSongs.some((likedArray) =>
+      likedArray.some((likedSong) => likedSong._id === songId)
+    );
   };
 
   useEffect(() => {
@@ -77,6 +109,19 @@ const SearchPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+  const handleShowDescriptionOfSong = (songId) => {
+    getSongById(songId)
+      .then((data) => {
+        setCurrentSong(data.data);
+        setShowDescriptionOfSong(true);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
+  const handleSuccessMessage = (message) => {
+    setSuccessMessage(message);
   };
 
   if (error === "Login required") {
@@ -150,7 +195,11 @@ const SearchPage = () => {
           <ul>
             {results.length > 0 &&
               results.map((result) => (
-                <li key={result._id} className="border-b p-2 flex items-center">
+                <li
+                  key={result._id}
+                  className="border-b border-gray-700 p-2 flex items-center"
+                  onClick={() => handleShowDescriptionOfSong(result._id)}
+                >
                   <img
                     src={result.ThumbnailUrl}
                     alt={result.title}
@@ -162,6 +211,25 @@ const SearchPage = () => {
           </ul>
         )}
       </div>
+      {/* Song description */}
+      {currentSong && showDescriptionOfSong && (
+        <div className="fixed bottom-5 right-3">
+          <SongDescription
+            close={() => setShowDescriptionOfSong(false)}
+            id={currentSong._id}
+            title={currentSong.title}
+            thumbnail={currentSong.ThumbnailUrl}
+            artist={currentSong.artist}
+            album={currentSong.album}
+            uploadedBy={currentSong.owner}
+            likes={currentSong.likesCount}
+            songUrl={currentSong.songUrl}
+            onSuccess={handleSuccessMessage}
+            isLiked={isLiked(currentSong._id)}
+            handleLikeSong={() => handleLikeSong(currentSong._id)}
+          />
+        </div>
+      )}
     </div>
   );
 };

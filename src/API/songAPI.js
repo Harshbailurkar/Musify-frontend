@@ -19,7 +19,6 @@ export async function getAllSongs(page) {
     }
   }
 }
-
 export async function getSongByOwner(owner) {
   try {
     const response = await axiosInstance.get(`/songs/owner/${owner}`);
@@ -95,7 +94,6 @@ export async function searchQuery(query) {
     }
   }
 }
-
 export async function uploadSong(formData) {
   try {
     const response = await axiosInstance.post("/songs/add-song", formData, {
@@ -149,6 +147,34 @@ export async function deleteSong(SongId) {
     if (error.response.status === 500) {
       throw new Error("Failed to delete song. Try Again !");
     } else if (error.request) {
+      throw new Error("No response received from the server");
+    } else {
+      throw new Error("Error setting up the request");
+    }
+  }
+}
+export async function updateSong(songId, formData) {
+  try {
+    const response = await axiosInstance.patch(
+      `/songs/update-song/${songId}`,
+      formData
+    );
+    return response.data;
+  } catch (e) {
+    if (e.response.status === 404) {
+      throw new Error("Song not found");
+    }
+    if (e.response.status === 401) {
+      throw new Error("Login required");
+    }
+    if (e.response.status === 402) {
+      throw new Error(
+        "Unauthorized request! you dont have permission to perform this action !"
+      );
+    }
+    if (e.response.status === 500) {
+      throw new Error("Failed to update song. Try Again !");
+    } else if (e.request) {
       throw new Error("No response received from the server");
     } else {
       throw new Error("Error setting up the request");

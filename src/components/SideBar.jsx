@@ -11,7 +11,7 @@ import {
   HiOutlineDotsHorizontal,
 } from "react-icons/hi";
 import { MdRadio } from "react-icons/md";
-import { getChannel, logoutUser } from "../API/userAPI";
+import { getCurrentUser, logoutUser } from "../API/userAPI";
 
 const SideBar = ({ isCollapsed, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -22,8 +22,10 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
 
   const getCookie = (name) => {
     const cookieString = document.cookie;
-    const cookies = cookieString.split("; ");
+    console.log("All cookies:", cookieString); // Log all cookies to verify their presence
+    const cookies = cookieString.split(";");
     for (let cookie of cookies) {
+      cookie = cookie.trim(); // Remove leading/trailing spaces
       const [cookieName, cookieValue] = cookie.split("=");
       if (cookieName === name) {
         return decodeURIComponent(cookieValue);
@@ -33,16 +35,13 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
   };
 
   useEffect(() => {
-    const username = getCookie("username");
-    if (username) {
-      getChannel(username)
-        .then((data) => {
-          setGetUser(data.data);
-        })
-        .catch((error) => {
-          setError(error.message || "Login failed");
-        });
-    }
+    getCurrentUser()
+      .then((data) => {
+        setGetUser(data.data);
+      })
+      .catch((error) => {
+        setError(error.message || "Login failed");
+      });
   }, []);
 
   useEffect(() => {

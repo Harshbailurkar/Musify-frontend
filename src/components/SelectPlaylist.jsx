@@ -1,35 +1,51 @@
-import React from "react";
-import { getFirstThreePlaylist, addSongToPlaylist } from "../API/playlistAPI";
+import React, { useState, useEffect } from "react";
+import {
+  getFirstThreePlaylist,
+  addSongToPlaylist,
+  searchPlaylist,
+} from "../API/playlistAPI";
+import { HiOutlinePlus, HiSearch } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
-export default function SearchPlaylist({ songId, close, success }) {
-  const [playlists, setPlaylists] = React.useState([]);
-  const [error, setError] = React.useState(null);
+const SearchPlaylist = ({ songId, close, success }) => {
+  const [playlists, setPlaylists] = useState([]);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     getFirstThreePlaylist()
       .then((data) => {
         setPlaylists(data.data);
       })
       .catch((error) => {
-        setError(error.message);
+        console.error("Error fetching playlists:", error.message);
+        setError("Failed to fetch playlists.");
       });
   }, []);
 
   const handleAddSongToPlaylist = (playlistId, songId) => {
-    console.log("Playlist Id " + playlistId + " . songId: " + songId);
-    try {
-      addSongToPlaylist(playlistId, songId)
-        .then(() => {
-          close();
-          success("Song added to Playlist");
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
-    } catch (error) {
-      console.log("error found " + error.message);
-      setError(error.message);
+    addSongToPlaylist(playlistId, songId)
+      .then(() => {
+        close();
+        success("Song added to Playlist");
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim() === "") {
+      return;
     }
+    searchPlaylist(searchQuery)
+      .then((data) => {
+        setPlaylists(data.data); // Update playlists based on search results
+      })
+      .catch((error) => {
+        setError("Failed to search playlists.");
+      });
   };
 
   return (
@@ -43,30 +59,53 @@ export default function SearchPlaylist({ songId, close, success }) {
       {error && (
         <div className="error text-red-500 text-sm text-center">{error}</div>
       )}
-      <h1 className="mt-2 mb-2">Search Playlist</h1>
-      <input
-        type="search"
-        className="w-full mb-2 p-1 rounded bg-musify-dark text-white border border-gray-700 text-sm"
-      />
-      <button className="bg-blue-500 text-white py-1 px-2 rounded">
-        Search
-      </button>
-      {error && <button>Create Playlist</button>}
-      {playlists &&
-        playlists.map((playlist) => (
-          <div
-            key={playlist._id}
-            className="flex p-1 items-center justify-between"
+      {playlists.length === 0 && (
+        <>
+          <p>You don't have any playlists yet!</p>
+          <button
+            className="border border-gray-600 flex items-center m-5 p-2 rounded bg-musify-dark"
+            onClick={() => navigate("/playlist")}
           >
-            <p>{playlist.name}</p>
+            Create Playlist <HiOutlinePlus />
+          </button>
+        </>
+      )}
+      {playlists.length > 0 && (
+        <>
+          <h1 className="mt-2 mb-2">Search Playlist</h1>
+          <div className="flex mb-2">
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-1 rounded bg-musify-dark text-white border border-gray-700 text-sm"
+            />
             <button
-              className="bg-blue-500 text-white py-1 px-2 rounded"
-              onClick={() => handleAddSongToPlaylist(playlist._id, songId)}
+              className="bg-blue-950 hover:bg-blue-900 text-white py-1 px-2 rounded ml-2"
+              onClick={handleSearch}
             >
-              Add
+              <HiSearch />
             </button>
           </div>
-        ))}
+        </>
+      )}
+
+      {playlists.map((playlist) => (
+        <div
+          key={playlist._id}
+          className="flex p-1 pt-2 items-center justify-between"
+        >
+          <p>{playlist.name}</p>
+          <button
+            className="bg-green-950 hover:bg-green-900 text-white py-1 px-2 rounded"
+            onClick={() => handleAddSongToPlaylist(playlist._id, songId)}
+          >
+            Add
+          </button>
+        </div>
+      ))}
     </div>
   );
-}
+};
+
+export default SearchPlaylist;

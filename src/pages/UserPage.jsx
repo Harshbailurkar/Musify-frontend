@@ -7,7 +7,7 @@ import SearchBar from "../components/Searchbar";
 import { useNavigate } from "react-router-dom";
 import EditProfile from "../components/EditProfile";
 import UploadSong from "../components/UploadSong";
-
+import EditSongInfo from "../components/EditSongInfo";
 export default function UserPage() {
   const [getUser, setGetUser] = useState("");
   const [error, setError] = useState(null);
@@ -19,8 +19,11 @@ export default function UserPage() {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [showUploadSongModal, setShowUploadSongModal] = useState(false);
+  const [showEditSongForm, setShowEditSongForm] = useState(false);
+  const [selectedSongId, setSelectedSongId] = useState(null);
   const navigate = useNavigate();
   const logoutRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     getCurrentUser()
@@ -58,7 +61,7 @@ export default function UserPage() {
           setError(error.message);
         });
     }
-  }, [getUser]);
+  }, [getUser, showEditSongForm]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -93,7 +96,8 @@ export default function UserPage() {
   };
 
   const handleEditClick = (id) => {
-    alert("Edit button clicked with id: " + id);
+    setSelectedSongId(id);
+    setShowEditSongForm(true);
     setShowEditTooltip(null);
   };
 
@@ -136,6 +140,17 @@ export default function UserPage() {
       setError(error.message || "Error while deleting song");
     }
   };
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Handle the selected file here
+      console.log("Selected file:", file);
+    }
+  };
 
   if (error === "Login required") {
     navigate("/login");
@@ -152,8 +167,36 @@ export default function UserPage() {
           <div className="progress-bar" />
         </div>
       )}
+      <div className="w-full h-52 ">
+        <div className="bg-gray-800 w-auto h-full mx-10 rounded-lg">
+          {getUser.coverPhoto ? (
+            <img
+              src={getUser.coverPhoto}
+              alt=""
+              className="w-full h-full object-cover rounded-lg"
+            />
+          ) : (
+            <div className="flex w-full h-full justify-center items-center">
+              <button
+                className="text-2xl text-center p-2 rounded border-gray-600 border hover:border-gray-500"
+                onClick={handleButtonClick}
+              >
+                Add a cover Photo
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+                accept="image/*"
+                name="coverPhoto"
+              />
+            </div>
+          )}
+        </div>
+      </div>
       {/* User Profile*/}
-      <div className="flex pt-20 pl-32">
+      <div className="flex pt-5 pl-32">
         <div className="w-32 h-32">
           <img
             src={
@@ -188,6 +231,7 @@ export default function UserPage() {
               )}
             </div>
           </span>
+          {/* Followers and following count */}
           <span className="flex pt-1 text-xl">
             <h4 className="pl-2 pt-1 px-6">
               Followers:{" "}
@@ -251,27 +295,18 @@ export default function UserPage() {
         {getSongList.length > 0 && (
           <div className="pt-5">
             <SearchBar searchQuery={searchQuery} handleSearch={handleSearch} />
-            <div className="grid grid-cols-1 gap-4 pt-10">
+            <div className="flex flex-wrap gap-4 pt-10">
               {filteredSongs.map((song) => (
                 <div
-                  className="bg-musify-dark p-4 flex rounded shadow-md items-center justify-between relative"
+                  className="bg-musify-dark w-52 p-4 flex flex-col flex-wrap rounded shadow-md   relative"
                   key={song._id}
                 >
-                  <div className="flex items-center">
-                    <img
-                      src={song.ThumbnailUrl}
-                      alt=""
-                      className="w-10 h-10 rounded-md mx-2"
-                    />
-                    <h3 className="text-lg font-semibold pl-10">
-                      {song.title}
-                    </h3>
-                  </div>
                   {/* Edit and delete icons */}
                   <div>
                     <HiOutlineDotsHorizontal
                       onClick={() => handleEditIconClick(song._id)}
-                      className="cursor-pointer"
+                      className="cursor-pointer m-1"
+                      size={22}
                     />
                     {showEditTooltip === song._id && (
                       <div className="absolute top-0 right-0 mt-2 w-32 bg-musify-dark text-white p-2 rounded shadow-lg z-10 border border-gray-600">
@@ -296,6 +331,31 @@ export default function UserPage() {
                         </button>
                       </div>
                     )}
+                    {showEditSongForm && (
+                      <EditSongInfo
+                        onClose={() => {
+                          setShowEditSongForm(false);
+                          setSelectedSongId(null);
+                        }}
+                        songId={selectedSongId}
+                      />
+                    )}
+                  </div>
+                  <div className="flex flex-col ">
+                    <img
+                      src={song.ThumbnailUrl}
+                      alt=""
+                      className="w-full h-44 rounded-md "
+                    />
+                    <h3 className="text-lg font-medium pt-2 text-left">
+                      {song.title}
+                    </h3>
+                    <h3 className="text-sm font-medium pt-2 text-left">
+                      from {song.album}
+                    </h3>
+                    <h3 className="text-sm font-medium pt-2 text-left">
+                      Likes :{" " + song.likesCount}
+                    </h3>
                   </div>
                 </div>
               ))}

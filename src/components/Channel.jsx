@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { HiOutlinePlus } from "react-icons/hi";
 import { followUser, unfollowUser } from "../API/userAPI.js";
-
+import { useNavigate } from "react-router-dom";
 function Channel(props) {
   const [isFollowing, setIsFollowing] = useState(props.isFollowed);
-
-  const handleFollowToggle = async () => {
+  const navigate = useNavigate();
+  const handleFollowToggle = async (e) => {
+    e.stopPropagation();
     try {
       if (isFollowing) {
         await unfollowUser(props.userId);
@@ -18,9 +19,15 @@ function Channel(props) {
       // Handle error gracefully (e.g., show error message to user)
     }
   };
+  const handleVisiteArtist = () => {
+    navigate(`/c/${props.username}`);
+  };
 
   return (
-    <div className="rounded-lg shadow-lg p-4 mb-4 flex items-center bg-gray-800">
+    <div
+      className="rounded-lg shadow-lg p-4 mb-4 flex items-center bg-gray-800"
+      onClick={handleVisiteArtist}
+    >
       <img
         src={
           props.avatar ||
@@ -37,9 +44,9 @@ function Channel(props) {
         )}
         <button
           className={`bg-${
-            isFollowing ? "gray" : "blue"
-          }-500 text-white px-4 py-1 rounded flex items-center`}
-          onClick={handleFollowToggle}
+            isFollowing ? "gray" : "purple"
+          }-600 text-white px-4 py-1 rounded flex items-center`}
+          onClick={(e) => handleFollowToggle(e)}
         >
           {isFollowing ? "Following" : "Follow"}
           {!isFollowing && <HiOutlinePlus className="ml-1" />}

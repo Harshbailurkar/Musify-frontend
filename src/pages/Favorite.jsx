@@ -57,11 +57,11 @@ export default function Favorite() {
         </span>
       ) : (
         <div className="pt-14 ml-16">
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-2">
             {songs.flat().map((song) => (
               <div
                 key={song._id}
-                className="bg-musify-dark p-4 flex rounded shadow-md items-center justify-between relative"
+                className=" p-4 flex rounded shadow-md items-center justify-between relative border border-gray-700"
               >
                 <div className="flex items-center">
                   <img

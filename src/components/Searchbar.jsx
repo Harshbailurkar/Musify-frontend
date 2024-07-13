@@ -7,7 +7,7 @@ export default function SearchBar({ searchQuery, handleSearch }) {
         <input
           type="search"
           placeholder="Search a Song Title"
-          className="p-2 pl-10 w-full ml-24 rounded search border border-gradient border-gradient-green focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent bg-musify-dark text-white"
+          className="p-2 pl-10 w-full ml-24 rounded search border border-gray-600 border-gradient border-gradient-green focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent bg-musify-dark text-white"
           value={searchQuery}
           onChange={handleSearch}
         />

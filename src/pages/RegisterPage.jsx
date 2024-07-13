@@ -1,23 +1,42 @@
 import React from "react";
 import { registerUser } from "../API/userAPI.js";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
+import Logo from "../assets/images/Logo.svg";
 
-export default function LoginPage() {
-  const [loginData, setLoginData] = React.useState({
+export default function RegisterPage() {
+  const [registerData, setRegisterData] = React.useState({
     username: "",
     email: "",
     fullName: "",
     password: "",
-    avatar: "",
   });
   const [error, setError] = React.useState(null);
   const [status, setStatus] = React.useState("idle");
   const navigate = useNavigate();
+
+  function validateInput() {
+    const { username, password } = registerData;
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+
+    if (password.length < 6) {
+      return "Password must be greater than 6 characters.";
+    }
+    if (!usernameRegex.test(username)) {
+      return "Username must not contain spaces or special characters.";
+    }
+    return null;
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
+    const validationError = validateInput();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
     setStatus("submitting");
 
-    registerUser(loginData)
+    registerUser(registerData)
       .then((data) => {
         console.log(data);
         setStatus("idle");
@@ -31,68 +50,72 @@ export default function LoginPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLoginData((prevData) => ({
+    setRegisterData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    setError(null);
   };
 
   return (
-    <div className="flex flex-col items-center self-center">
-      <div className="items-center text-center mt-28">
+    <div className="flex flex-col items-center self-center text-white">
+      <div className="items-center text-center mt-5">
+        <div className="w-auto">
+          <img src={Logo} alt="Musify" className="w-full" />
+        </div>
         <h1 className="text-4xl font-bold pb-9">Register</h1>
         <p>Fill all the details</p>
+        {error && <p className="text-red-500 w-52">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <input
               type="text"
-              className="border-2 p-2 m-2"
+              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
               placeholder="Username"
               onChange={handleChange}
               name="username"
-              value={loginData.usernameOrEmail}
+              value={registerData.username}
             />
             <input
-              type="eamil"
-              className="border-2 p-2 m-2"
+              type="email"
+              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
               placeholder="Email"
               onChange={handleChange}
               name="email"
-              value={loginData.usernameOrEmail}
+              value={registerData.email}
             />
             <input
               type="text"
-              className="border-2 p-2 m-2"
+              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
               placeholder="Full Name"
               onChange={handleChange}
               name="fullName"
-              value={loginData.usernameOrEmail}
+              value={registerData.fullName}
             />
             <input
               type="password"
-              className="border-2 p-2 m-2"
+              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
               placeholder="Password"
               onChange={handleChange}
               name="password"
-              value={loginData.password}
-            />
-            <input
-              type="file"
-              placeholder="chosese a profile picture"
-              onChange={handleChange}
-              name="avatar"
-              value={loginData.avatar}
+              value={registerData.password}
             />
             <button
-              className="bg-blue-400 p-2 m-2 rounded"
+              className="bg-blue-400 p-2 m-2 rounded text-black"
               disabled={status === "submitting"}
             >
-              {status === "submitting" ? "creating ..." : "create account"}
+              {status === "submitting" ? "Creating ..." : "Create Account"}
             </button>
           </div>
         </form>
-        {error && <p className="text-red-500">{error}</p>}{" "}
-        <h3 className="">already have an account? login Here</h3>
+
+        <h3>
+          Already have an account?{" "}
+          <NavLink to="/login" className="text-blue-600">
+            Login
+          </NavLink>{" "}
+          here
+        </h3>
       </div>
     </div>
   );
