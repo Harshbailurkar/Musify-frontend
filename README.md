@@ -63,7 +63,6 @@ Once the development server is running, you can explore the following features:
 - **Axios**: Promise-based HTTP client for making API requests
 
 ## Folder Structure
-
 musify-frontend/
 ├── public/
 │ ├── index.html
@@ -88,8 +87,6 @@ musify-frontend/
 │ ├── index.js
 │ └── ...
 └── package.json
-
-
 ## Contributing
 
 If you want to contribute to this project, please fork the repository and create a new branch for your features or bug fixes. Once you are done, submit a pull request.
