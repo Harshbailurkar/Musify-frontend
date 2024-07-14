@@ -4,6 +4,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { toggleLikeSong } from "../API/favoriteAPI";
 import { MdOutlineWatchLater, MdOutlinePlaylistAdd } from "react-icons/md";
+import { addSongToListenLater } from "../API/listenLaterAPI";
 import SearchPlaylist from "./SelectPlaylist";
 import { IoShareOutline } from "react-icons/io5";
 import { TbUserShare } from "react-icons/tb";
@@ -19,12 +20,12 @@ const SongDescription = ({
   likes,
   album,
   isLiked,
-  handleLikeSong,
   songUrl,
   onSuccess,
 }) => {
   const isLongTitle = title.length + artist.length > 15;
   const isLongArtist = artist.length > 15;
+  const isTitleLong = title.length > 55;
   const [liked, setLiked] = useState(isLiked);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(new Audio(songUrl));
@@ -39,7 +40,6 @@ const SongDescription = ({
   }, [title, artist, uploadedBy, isLiked]);
 
   useEffect(() => {
-    // Function to handle clicks outside SearchPlaylist
     const handleClickOutside = (event) => {
       if (
         searchPlaylistRef.current &&
@@ -50,32 +50,29 @@ const SongDescription = ({
       }
     };
 
-    // Adding event listener when component mounts
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Clean up event listener when component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const toggleLike = async () => {
     try {
       await toggleLikeSong(id); // Toggle like status via API
       setLiked((prevLiked) => !prevLiked); // Toggle liked state locally
-      handleLikeSong(id); // Update liked status in parent component
     } catch (error) {
       console.log(error.message);
     }
-  };
-
-  const togglePlayPause = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
   };
 
   const AddSongToListenLater = async (id) => {
@@ -102,17 +99,17 @@ const SongDescription = ({
   };
 
   return (
-    <div className="fixed top-0 right-0 bottom-20 flex items-center justify-center overflow-y-auto z-50 scrollbar scrollbar-thumb-gray-900">
-      <div className="bg-musify-dark text-white flex flex-col rounded-xl items-center p-6 pb-10 relative max-h-full overflow-y-auto">
+    <div className="fixed top-3 right-0 bottom-20">
+      <div className="bg-musify-dark text-white flex flex-col rounded-xl items-center p-6 pb-10 relative max-h-full min-h-0">
         {/* Header */}
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center">
           <div className={`sliding-container ${isLongTitle ? "sliding" : ""}`}>
             <div className="sliding-text">
               {title} by {artist}
             </div>
           </div>
           <HiOutlineDotsHorizontal
-            className="text-2xl mx-2 cursor-pointer"
+            className="text-2xl mx-2"
             onClick={() => setShowOtherOptions((prev) => !prev)}
           />
           {showOtherOptions && (
@@ -147,13 +144,22 @@ const SongDescription = ({
         </div>
         {/* Song details */}
         <div className="w-64">
-          <h1 className="text-2xl font-bold mt-4 pb-3">{title}</h1>
+          <div
+            className={`title-sliding-container ${
+              isTitleLong ? "sliding" : ""
+            }`}
+          >
+            <div className={`${isTitleLong ? "title-sliding-text" : "flex"} `}>
+              <h1 className="text-xl font-bold mt-4 pb-3">{title}</h1>
+            </div>
+          </div>
+
           <span className="flex items-center">
             <div
               className={`sliding-container ${isLongArtist ? "sliding" : ""}`}
             >
               <div className="sliding-text flex">
-                <p className="text-lg text-gray-300">Artist: {artist}</p>
+                <p className=" text-gray-300">Artist: {artist}</p>
               </div>
             </div>
             <div onClick={toggleLike} className="ml-2">
@@ -164,9 +170,13 @@ const SongDescription = ({
               )}
             </div>
           </span>
-          <p className="text-lg text-gray-300">Album: {album}</p>
-          <p className="text-lg text-gray-300">Uploaded by: {uploadedBy}</p>
-          <p className="text-lg text-gray-300">Likes: {likes}</p>
+          <div className={`sliding-container ${isLongArtist ? "sliding" : ""}`}>
+            <div className="sliding-text flex">
+              <p className=" text-gray-300">Album: {album}</p>
+            </div>
+          </div>
+          <p className=" text-gray-300">Uploaded by: {uploadedBy}</p>
+          <p className=" text-gray-300">Likes: {likes}</p>
           {error && error !== "No Songs are available" && (
             <h1 className="text-red-500">{error}</h1>
           )}

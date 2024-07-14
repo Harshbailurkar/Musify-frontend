@@ -3,9 +3,14 @@ import { useParams } from "react-router-dom";
 import { getChannel, getFollowedAccounts } from "../API/userAPI";
 import { followUser, unfollowUser } from "../API/userAPI.js";
 import NotFound from "../assets/images/NotFound.png";
-import { getSongByOwner } from "../API/songAPI.js";
+import { getSongByOwner, getSongById } from "../API/songAPI.js";
+import { getAllLikedSong } from "../API/favoriteAPI";
 import SearchBar from "../components/Searchbar";
 import Logo from "../assets/images/Logo.svg";
+import { useDispatch } from "react-redux";
+import { setMusicData } from "../Redux/Slices/musicData";
+import SongDescription from "../components/SongDescription";
+
 export default function ArtistProfile() {
   const { username } = useParams();
   const [channel, setChannel] = React.useState(null);
@@ -14,7 +19,13 @@ export default function ArtistProfile() {
   const [followedChannels, setFollowedChannels] = React.useState([]);
   const [getSongList, setSongList] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = React.useState(true);
+  const [showDescriptionOfSong, setShowDescriptionOfSong] =
+    React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState(null);
+  const [likedSongs, setLikedSongs] = React.useState([]);
+  const [currentSong, setCurrentSong] = React.useState(null);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     getChannel(username)
@@ -42,7 +53,16 @@ export default function ArtistProfile() {
       })
       .catch((err) => setError(err.message));
   }, [channel]);
-
+  React.useEffect(() => {
+    getAllLikedSong()
+      .then((data) => {
+        setLikedSongs(data.data);
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log("Error from our side! Please refresh.");
+      });
+  }, [showDescriptionOfSong]);
   const handleFollowToggle = async () => {
     try {
       if (isFollowing) {
@@ -61,6 +81,28 @@ export default function ArtistProfile() {
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
+  const handlePlaySong = (url, songName, uploadedBy, thumbnail) => {
+    dispatch(setMusicData({ url, songName, uploadedBy, thumbnail }));
+  };
+  const handleShowDescriptionOfSong = (songId) => {
+    getSongById(songId)
+      .then((data) => {
+        setCurrentSong(data.data);
+        setShowDescriptionOfSong(true);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
+  const handleSuccessMessage = (message) => {
+    setSuccessMessage(message);
+  };
+  const isLiked = (songId) => {
+    return likedSongs.some((likedArray) =>
+      likedArray.some((likedSong) => likedSong._id === songId)
+    );
+  };
+
   const filteredSongs = getSongList.filter((song) =>
     song.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -75,6 +117,12 @@ export default function ArtistProfile() {
             className="animate-pulse max-w-3/4"
             style={{ width: "50%", height: "auto" }}
           />
+        </div>
+      )}
+      {successMessage && (
+        <div className="progress-bar-wrapper text-center bg-green-500 brightness-75">
+          <h1 className="text-neutral-900">{successMessage}</h1>
+          <div className="progress-bar" />
         </div>
       )}
       {error && error !== "No Songs are availabe" && (
@@ -152,6 +200,15 @@ export default function ArtistProfile() {
                 <div
                   className="bg-musify-dark w-48 p-4 flex flex-col flex-wrap rounded shadow-md   relative"
                   key={song._id}
+                  onClick={() => {
+                    handlePlaySong(
+                      song.songUrl,
+                      song.title,
+                      song.owner,
+                      song.ThumbnailUrl
+                    );
+                    handleShowDescriptionOfSong(song._id);
+                  }}
                 >
                   <div className="flex flex-col ">
                     <img
@@ -172,6 +229,23 @@ export default function ArtistProfile() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+        {currentSong && showDescriptionOfSong && (
+          <div className="fixed bottom-5 right-3">
+            <SongDescription
+              close={() => setShowDescriptionOfSong(false)}
+              id={currentSong._id}
+              title={currentSong.title}
+              thumbnail={currentSong.ThumbnailUrl}
+              artist={currentSong.artist}
+              album={currentSong.album}
+              uploadedBy={currentSong.owner}
+              likes={currentSong.likesCount}
+              songUrl={currentSong.songUrl}
+              onSuccess={handleSuccessMessage}
+              isLiked={isLiked(currentSong._id)}
+            />
           </div>
         )}
       </div>

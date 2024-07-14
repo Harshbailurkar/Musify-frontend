@@ -132,14 +132,26 @@ h6 {
   width: 200px; /* Adjust as needed */
   overflow: hidden; /* Hide overflowing content */
 }
+.title-sliding-container {
+  width: 250px; /* Adjust as needed */
+  overflow: hidden;
+}
 
+.title-sliding-text {
+  display: inline-block; /* Make text display inline */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
 .sliding-text {
   display: inline-block; /* Make text display inline */
   white-space: nowrap; /* Prevent text from wrapping */
 }
 
+.title-sliding-text {
+  animation: slide 60s linear infinite; /* Slide animation */
+}
+
 .sliding .sliding-text {
-  animation: slide 15s linear infinite; /* Slide animation */
+  animation: slide 30s linear infinite; /* Slide animation */
 }
 
 @keyframes slide {

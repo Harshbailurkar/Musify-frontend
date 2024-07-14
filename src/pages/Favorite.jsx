@@ -40,8 +40,8 @@ export default function Favorite() {
       });
   }
 
-  const handlePlaySong = (url, title, uploadedBy, thumbnail) => {
-    dispatch(setMusicData({ url, title, uploadedBy, thumbnail })); // corrected parameter name id to title
+  const handlePlaySong = (url, songName, uploadedBy, thumbnail) => {
+    dispatch(setMusicData({ url, songName, uploadedBy, thumbnail })); // corrected parameter name id to title
   };
 
   useEffect(() => {

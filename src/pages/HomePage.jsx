@@ -6,7 +6,7 @@ import { category } from "../assets/constant";
 import SongDescription from "../components/SongDescription";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import Logo from "../assets/images/Logo.svg";
-import { useSelector } from "react-redux";
+
 const HomePage = () => {
   const navigate = useNavigate();
   const [songs, setSongs] = useState([]);
@@ -17,8 +17,6 @@ const HomePage = () => {
   const [likedSongs, setLikedSongs] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
   const [isLoading, setLoading] = useState(true); // State to track loading state
-  const loggedIn = useSelector((state) => state.auth);
-  console.log(loggedIn);
 
   /* Fetch all songs */
   useEffect(() => {
@@ -61,18 +59,6 @@ const HomePage = () => {
       .catch((error) => {
         setError(error.message);
       });
-  };
-
-  const handleLikeSong = async (songId) => {
-    try {
-      await toggleLikeSong(songId);
-      const updatedSongs = songs.map((song) =>
-        song._id === songId ? { ...song, isLiked: !song.isLiked } : song
-      );
-      setSongs(updatedSongs);
-    } catch (error) {
-      console.log(error.message);
-    }
   };
 
   const isLiked = (songId) => {
@@ -173,7 +159,6 @@ const HomePage = () => {
             songUrl={currentSong.songUrl}
             onSuccess={handleSuccessMessage}
             isLiked={isLiked(currentSong._id)}
-            handleLikeSong={() => handleLikeSong(currentSong._id)}
           />
         </div>
       )}

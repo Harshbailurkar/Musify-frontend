@@ -1,63 +1,22 @@
 import radioData from "../assets/radioData";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { setMusicData } from "../Redux/Slices/musicData";
 
 export default function Radio() {
-  const [songUrl, setSongUrl] = useState("");
-  const [isAutoplay, setIsAutoplay] = useState(false);
   const [currentSongId, setCurrentSongId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const dispatch = useDispatch();
 
-  function playsong(url, id) {
-    setSongUrl(url);
-    setIsLoading(true);
-    setIsAutoplay(true);
-    setCurrentSongId(id);
-    setIsError(false);
-
-    if (audioRef.current) {
-      audioRef.current.load(); // Reset the audio element to load the new song
-
-      audioRef.current.play().catch((error) => {
-        console.error("Failed to start playback:", error);
-        setIsLoading(false);
-        setIsError(true);
-      });
-    }
-  }
-
-  function togglePlayPause() {
-    if (audioRef.current.paused) {
-      audioRef.current.play();
-      setIsAutoplay(true);
+  function togglePlayPause(id, url, songName, uploadedBy, thumbnail) {
+    if (currentSongId === id) {
+      setIsPlaying(!isPlaying);
     } else {
-      audioRef.current.pause();
-      setIsAutoplay(false);
+      setCurrentSongId(id);
+      setIsPlaying(true);
+      dispatch(setMusicData({ url, songName, uploadedBy, thumbnail }));
     }
-  }
-
-  function CustomeControllerChange(event) {
-    const progress = event.target.value;
-    audioRef.current.currentTime = progress;
-  }
-
-  function handleLoadStart() {
-    setIsLoading(true);
-  }
-
-  function handleLoadedData() {
-    setIsLoading(false);
-  }
-
-  function handleError() {
-    console.error("Failed to load the audio");
-    setIsLoading(false);
-    setIsError(true);
-    setTimeout(() => {
-      setIsError(false);
-    }, 5000); // Hide the error message after 5 seconds
   }
 
   return (
@@ -71,13 +30,23 @@ export default function Radio() {
             <br />
             <div>
               {radioData.map((radio) => {
+                const isCurrentSongPlaying =
+                  currentSongId === radio.id && isPlaying;
                 return (
                   <div
                     key={radio.id}
                     className={`flex flex-row items-center justify-between p-4 ${
                       currentSongId === radio.id ? "bg-blue-900" : ""
                     }`}
-                    onClick={() => playsong(radio.url, radio.id)}
+                    onClick={() =>
+                      togglePlayPause(
+                        radio.id,
+                        radio.url,
+                        radio.title,
+                        radio.title,
+                        radio.image
+                      )
+                    }
                   >
                     <div className="flex flex-row items-center">
                       <img
@@ -90,69 +59,13 @@ export default function Radio() {
                       </div>
                     </div>
                     <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
-                      <FaPlay />
+                      {isCurrentSongPlaying ? <FaPause /> : <FaPlay />}
                     </button>
                   </div>
                 );
               })}
             </div>
           </div>
-        </div>
-        <div className="audio-player">
-          {songUrl && (
-            <div>
-              <audio
-                controls={false} // Hide default controls
-                autoPlay={isAutoplay}
-                onEnded={() => {
-                  setIsAutoplay(false);
-                  setIsError(false);
-                }}
-                ref={audioRef}
-                onLoadedData={handleLoadedData}
-                onLoadStart={handleLoadStart}
-                onError={handleError}
-              >
-                <source src={songUrl} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
-              <div className="custom-controls flex flex-col align-middle items-start">
-                <button
-                  onClick={togglePlayPause}
-                  className="custom-play-pause-btn"
-                >
-                  {isAutoplay ? <FaPause /> : <FaPlay />}
-                </button>
-
-                {audioRef.current && (
-                  <input
-                    type="range"
-                    min="0"
-                    max={
-                      isNaN(audioRef.current.duration)
-                        ? "0"
-                        : audioRef.current.duration.toString()
-                    }
-                    step="1"
-                    value={audioRef.current.currentTime}
-                    onChange={CustomeControllerChange}
-                    id="progress"
-                  />
-                )}
-              </div>
-              <div
-                className="red-progress-bar"
-                style={{ width: `${isLoading ? "100%" : "0"}` }}
-              ></div>
-              {isError && (
-                <div className="error-message text-center pr-48">
-                  <h1 className="text-xl text-red-600">
-                    Unable to reach the Radio Station. Please try again later.
-                  </h1>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>

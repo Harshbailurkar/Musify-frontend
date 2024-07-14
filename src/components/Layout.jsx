@@ -23,10 +23,6 @@ const Layout = () => {
     window.dispatchEvent(new CustomEvent("isSidebarCollapsedChange"));
   }, [isCollapsed]);
 
-  useEffect(() => {
-    console.log("isAuthenticated state changed:", isAuthenticated);
-  }, [isAuthenticated]);
-
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };

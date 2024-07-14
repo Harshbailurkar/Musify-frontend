@@ -246,8 +246,8 @@ export default function Playlist() {
       console.error("Failed to move song to bottom:", err);
     }
   };
-  const handlePlaySong = (url, title, uploadedBy, thumbnail) => {
-    dispatch(setMusicData({ url, title, uploadedBy, thumbnail })); // corrected parameter name id to title
+  const handlePlaySong = (url, songName, uploadedBy, thumbnail) => {
+    dispatch(setMusicData({ url, songName, uploadedBy, thumbnail })); // corrected parameter name id to title
   };
   if (error === "Login required") {
     navigate("/login");

@@ -11,8 +11,17 @@ import UserPage from "./pages/UserPage";
 import Radio from "./pages/Radio";
 import ArtistProfile from "./pages/ArtistProfile";
 import PageNotFound from "./pages/PageNotFound";
-
+import { useEffect } from "react";
 export default function App() {
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+    };
+    document.addEventListener("contextmenu", handleContextMenu);
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
   return (
     <BrowserRouter>
       <div className="flex-1 flex flex-col bg-gradient-to-br from-black to-[#000000]">
