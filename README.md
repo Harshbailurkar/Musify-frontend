@@ -61,32 +61,7 @@ Once the development server is running, you can explore the following features:
 - **Redux**: State management
 - **Tailwind CSS**: Utility-first CSS framework
 - **Axios**: Promise-based HTTP client for making API requests
-
-## Folder Structure
-musify-frontend/
-├── public/
-│ ├── index.html
-│ └── ...
-├── src/
-│ ├── assets/
-│ │ ├── images/
-│ │ └── constant.js
-│ ├── components/
-│ │ ├── Songs.js
-│ │ └── ...
-│ ├── API/
-│ │ ├── songAPI.js
-│ │ └── favoriteAPI.js
-│ ├── pages/
-│ │ ├── HomePage.js
-│ │ └── ...
-│ ├── redux/
-│ │ ├── authSlice.js
-│ │ └── ...
-│ ├── App.js
-│ ├── index.js
-│ └── ...
-└── package.json
+  
 ## Contributing
 
 If you want to contribute to this project, please fork the repository and create a new branch for your features or bug fixes. Once you are done, submit a pull request.
