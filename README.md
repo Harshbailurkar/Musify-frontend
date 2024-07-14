@@ -9,7 +9,7 @@ Musify is a feature-rich frontend application for an online music web platform. 
 - **Song Details:** View detailed information about each song.
 - **Like Songs:** Like your favorite songs to save them for later.
 - **User Authentication:** Secure login and registration for personalized experiences.
-- **Responsive Design:** Enjoy a seamless experience across various devices.
+
 
 ## Demo
 
