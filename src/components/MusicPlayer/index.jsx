@@ -19,9 +19,27 @@ const MusicPlayer = () => {
   const [volume, setVolume] = useState(0.3);
   const [repeat, setRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
+    localStorage.getItem("isSidebarCollapsed") === "true"
+  );
   const audioRef = useRef(null); // Ref for the audio element
 
-  const collapse = localStorage.getItem("isSidebarCollapsed");
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsSidebarCollapsed(
+        localStorage.getItem("isSidebarCollapsed") === "true"
+      );
+    };
+
+    window.addEventListener("isSidebarCollapsedChange", handleStorageChange);
+
+    return () => {
+      window.removeEventListener(
+        "isSidebarCollapsedChange",
+        handleStorageChange
+      );
+    };
+  }, []);
 
   // Effect to handle songObject change
   useEffect(() => {
@@ -70,7 +88,11 @@ const MusicPlayer = () => {
   };
 
   return (
-    <div className="fixed bottom-0 right-0 left-auto w-10/12 z-50 bg-gray-950 text-white p-3">
+    <div
+      className={`fixed bottom-0 right-0 left-auto ${
+        isSidebarCollapsed ? "w-11/12" : "w-10/12"
+      } z-50 bg-gray-950 text-white p-3`}
+    >
       <div className="relative sm:px-12 px-8 w-full flex items-center justify-between">
         <Track
           isPlaying={isPlaying}

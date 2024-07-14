@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getAllSongs, getSongById } from "../API/songAPI";
 import Songs from "../components/Songs";
-import { HiOutlineArrowSmRight } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { category } from "../assets/constant";
 import SongDescription from "../components/SongDescription";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import Logo from "../assets/images/Logo.svg";
-
+import { useSelector } from "react-redux";
 const HomePage = () => {
   const navigate = useNavigate();
   const [songs, setSongs] = useState([]);
@@ -18,6 +17,8 @@ const HomePage = () => {
   const [likedSongs, setLikedSongs] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
   const [isLoading, setLoading] = useState(true); // State to track loading state
+  const loggedIn = useSelector((state) => state.auth);
+  console.log(loggedIn);
 
   /* Fetch all songs */
   useEffect(() => {

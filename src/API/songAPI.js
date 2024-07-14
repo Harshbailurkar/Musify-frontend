@@ -6,6 +6,7 @@ export async function getAllSongs(page) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (error.response) {
@@ -30,6 +31,7 @@ export async function getSongByOwner(owner) {
       } else if (error.response.status === 400) {
         throw new Error("Bad request. Please check the owner parameter.");
       } else if (error.response.status === 401) {
+        localStorage.setItem("isAuthenticated", false);
         throw new Error("Login required");
       } else {
         throw new Error(
@@ -54,6 +56,7 @@ export async function getSongById(songId) {
       } else if (error.response.status === 400) {
         throw new Error("Bad request. Please check the owner parameter.");
       } else if (error.response.status === 401) {
+        localStorage.setItem("isAuthenticated", false);
         throw new Error("Login required");
       } else {
         throw new Error(
@@ -81,6 +84,7 @@ export async function searchQuery(query) {
       } else if (error.response.status === 400) {
         throw new Error("Bad request. Please check the owner parameter.");
       } else if (error.response.status === 401) {
+        localStorage.setItem("isAuthenticated", false);
         throw new Error("Login required");
       } else {
         throw new Error(
@@ -106,6 +110,7 @@ export async function uploadSong(formData) {
   } catch (error) {
     if (error.response) {
       if (error.response.status === 401) {
+        localStorage.setItem("isAuthenticated", false);
         throw new Error("Login required");
       } else if (error.response.status === 400) {
         throw new Error("Song is required");
@@ -137,6 +142,7 @@ export async function deleteSong(SongId) {
       throw new Error("Song not found");
     }
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (error.response.status === 402) {
@@ -165,6 +171,7 @@ export async function updateSong(songId, formData) {
       throw new Error("Song not found");
     }
     if (e.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (e.response.status === 402) {

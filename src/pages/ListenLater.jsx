@@ -9,20 +9,23 @@ import { useNavigate } from "react-router-dom";
 import { CiSquareRemove } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
-
+import Logo from "../assets/images/Logo.svg";
 export default function ListenLater() {
   const navigate = useNavigate();
   const [listenLaterSongs, setListenLaterSongs] = useState([]);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
   const getSongs = () => {
     getAllListenLaterSong()
       .then((data) => {
+        setLoading(false);
         setListenLaterSongs(data.data);
       })
       .catch((error) => {
+        setLoading(false);
         setError(error.message);
         console.log("Error from our side! Please refresh.");
       });
@@ -58,7 +61,17 @@ export default function ListenLater() {
   }
 
   return (
-    <div className=" text-white">
+    <div className=" text-white relative">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="animate-pulse max-w-3/4"
+            style={{ width: "50%", height: "auto" }}
+          />
+        </div>
+      )}
       {error && error !== "No Songs are availabe" && (
         <h1 className="text-red-500">{error}</h1>
       )}

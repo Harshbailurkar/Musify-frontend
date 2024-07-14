@@ -6,6 +6,7 @@ export async function getAllLikedSong() {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (error.response) {
@@ -26,6 +27,7 @@ export async function toggleLikeSong(id) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (error.response) {

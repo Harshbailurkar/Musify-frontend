@@ -1,5 +1,4 @@
 import React from "react";
-import { HiOutlineHeart } from "react-icons/hi";
 import { FaPlay } from "react-icons/fa";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useDispatch } from "react-redux";

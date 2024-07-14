@@ -6,6 +6,7 @@ export async function getAllPlaylist() {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response) {
       throw new Error(
@@ -22,6 +23,7 @@ export async function getFirstThreePlaylist() {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 404) {
       throw new Error("No Playlist Found");
@@ -44,6 +46,7 @@ export async function createPlaylist(playlistName) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response) {
       throw new Error(
@@ -62,6 +65,7 @@ export async function searchPlaylist(name) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 404) {
       throw new Error("No Playlist Found");
@@ -85,6 +89,7 @@ export async function deletePlaylist(playlistId) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 400) {
       throw new Error("Playlist with name already exists");
@@ -110,6 +115,7 @@ export async function updatePlaylist(playlistId, playlistName) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 402) {
       throw new Error(402, "Playlist with name already exists");
@@ -132,12 +138,13 @@ export async function addSongToPlaylist(playlistId, songId) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 404) {
       throw new Error("Playlist or Song not found");
     } else if (error.response.status === 409) {
       throw new Error("Song already exists in playlist");
-    } else if (error.response.status === 401) {
+    } else if (error.response.status === 402) {
       throw new Error("Playlist with name already exists");
     } else if (error.response.status === 400) {
       throw new Error("Playlist Id and Song Id are required");
@@ -158,6 +165,7 @@ export async function removeSongFromPlaylist(playlistId, songId) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 404) {
       throw new Error(402, "Playlist Not Found");
@@ -176,6 +184,7 @@ export async function moveSongToTopInPlaylist(playlistId, songId) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 404) {
       throw new Error("Playlist not found");
@@ -194,6 +203,7 @@ export async function moveSongToBottomInPlaylist(playlistId, songId) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     } else if (error.response.status === 404) {
       throw new Error("Playlist not found");

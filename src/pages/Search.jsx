@@ -7,6 +7,8 @@ import SongDescription from "../components/SongDescription";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
+import Logo from "../assets/images/Logo.svg";
+
 const SearchPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,13 +21,16 @@ const SearchPage = () => {
   const [currentSong, setCurrentSong] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [likedSongs, setLikedSongs] = useState([]);
+  const [isPageLoading, setPageLoading] = useState(true);
   const dispatch = useDispatch();
 
   const fetchFollowedChannels = async () => {
     try {
       const response = await getFollowedAccounts();
       setFollowedChannels(response.followedUsers);
+      setPageLoading(false);
     } catch (error) {
+      setPageLoading(false);
       console.error("Error fetching followed channels", error);
     }
   };
@@ -136,7 +141,17 @@ const SearchPage = () => {
   }
 
   return (
-    <div className="p-4 text-white">
+    <div className="p-4 text-white relative">
+      {isPageLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="animate-pulse max-w-3/4"
+            style={{ width: "50%", height: "auto" }}
+          />
+        </div>
+      )}
       <h1 className="text-5xl font-bold mb-4 mt-10">Search Your Track</h1>
       <form onSubmit={handleSearch} className="mb-4 mt-14">
         <input

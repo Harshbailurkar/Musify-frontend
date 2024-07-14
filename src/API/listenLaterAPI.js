@@ -6,6 +6,7 @@ export async function getAllListenLaterSong() {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (error.response) {
@@ -25,6 +26,7 @@ export async function addSongToListenLater(songId) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (error.response.status === 402) {
@@ -49,6 +51,7 @@ export async function removeSongToListenLater(songId) {
     return response.data;
   } catch (error) {
     if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     if (error.response.status === 404) {

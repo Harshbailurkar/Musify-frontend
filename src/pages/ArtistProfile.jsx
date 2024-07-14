@@ -5,6 +5,7 @@ import { followUser, unfollowUser } from "../API/userAPI.js";
 import NotFound from "../assets/images/NotFound.png";
 import { getSongByOwner } from "../API/songAPI.js";
 import SearchBar from "../components/Searchbar";
+import Logo from "../assets/images/Logo.svg";
 export default function ArtistProfile() {
   const { username } = useParams();
   const [channel, setChannel] = React.useState(null);
@@ -13,10 +14,12 @@ export default function ArtistProfile() {
   const [followedChannels, setFollowedChannels] = React.useState([]);
   const [getSongList, setSongList] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [isLoading, setLoading] = useState(true);
 
   React.useEffect(() => {
     getChannel(username)
       .then((data) => {
+        setLoading(false);
         setChannel(data.data);
       })
       .catch((err) => setError(err.message));
@@ -24,6 +27,7 @@ export default function ArtistProfile() {
   React.useEffect(() => {
     getFollowedAccounts()
       .then((data) => {
+        setLoading(false);
         setFollowedChannels(data.followedUsers);
         if (data.followedUsers.some((user) => user.username === username)) {
           setIsFollowing(true);
@@ -62,7 +66,17 @@ export default function ArtistProfile() {
   );
 
   return (
-    <div className="text-white">
+    <div className="text-white relative">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="animate-pulse max-w-3/4"
+            style={{ width: "50%", height: "auto" }}
+          />
+        </div>
+      )}
       {error && error !== "No Songs are availabe" && (
         <h1 className="text-red-500">{error}</h1>
       )}

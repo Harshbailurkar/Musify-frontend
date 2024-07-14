@@ -23,7 +23,7 @@ import {
 } from "../API/playlistAPI";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
-
+import Logo from "../assets/images/Logo.svg";
 export default function Playlist() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
@@ -37,13 +37,18 @@ export default function Playlist() {
   const [showPlayListUpdateForm, setShowPlayListUpdateForm] = useState(false);
   const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
   const [showEditTooltip, setShowEditTooltip] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
   const fetchPlaylists = async () => {
     try {
       getAllPlaylist()
-        .then((data) => setPlaylists(data.data))
+        .then((data) => {
+          setLoading(false);
+          setPlaylists(data.data);
+        })
         .catch((error) => {
+          setLoading(false);
           setError(error.message);
         });
     } catch (err) {
@@ -255,6 +260,16 @@ export default function Playlist() {
 
   return (
     <div className="relative">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="animate-pulse max-w-3/4"
+            style={{ width: "50%", height: "auto" }}
+          />
+        </div>
+      )}
       <div
         className={`main-content ${showPlaylistCreationForm ? "blur-sm" : ""}`}
       >

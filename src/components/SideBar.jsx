@@ -64,8 +64,9 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
   const handleLogout = () => {
     logoutUser()
       .then((data) => {
-        console.log("User logged out successfully!");
+        localStorage.setItem("isAuthenticated", false);
         navigate("/login");
+        window.location.reload();
       })
       .catch((error) => {
         setError(error.message || "Logout failed");

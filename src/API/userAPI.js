@@ -5,8 +5,10 @@ export const loginUser = async (loginData) => {
     const response = await axiosInstance.post("/users/login", loginData);
     return response.data;
   } catch (error) {
-    if (error.response.status === 402) {
+    if (error.response.status === 400) {
       throw new Error("Invalid credentials");
+    } else if (error.response.status === 404) {
+      throw new Error("User Not Found");
     }
     throw error.response ? error.response.data : new Error("Login failed");
   }
@@ -53,6 +55,7 @@ export async function getChannel(username) {
     if (error.response.status === 501) {
       throw new Error("User Not found");
     } else if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     throw error.response ? error.response.data : new Error("user not Found");
@@ -67,6 +70,7 @@ export async function getCurrentUser() {
     if (error.response.status === 501) {
       throw new Error("User Not found");
     } else if (error.response.status === 401) {
+      localStorage.setItem("isAuthenticated", false);
       throw new Error("Login required");
     }
     throw error.response ? error.response.data : new Error("user not Found");

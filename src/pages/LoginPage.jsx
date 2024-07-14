@@ -3,6 +3,7 @@ import { loginUser } from "../API/userAPI.js";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import Logo from "../assets/images/Logo.svg";
+
 export default function LoginPage() {
   const [loginData, setLoginData] = React.useState({
     usernameOremail: "",
@@ -19,10 +20,12 @@ export default function LoginPage() {
     loginUser(loginData)
       .then((data) => {
         setStatus("idle");
-        window.location.reload();
         navigate("/");
+        window.location.reload();
+        localStorage.setItem("isAuthenticated", true);
       })
       .catch((error) => {
+        localStorage.setItem("loggedIn", false);
         setError(error.message || "Login failed");
         setStatus("idle");
       });

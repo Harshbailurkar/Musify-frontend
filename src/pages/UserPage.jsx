@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import EditProfile from "../components/EditProfile";
 import UploadSong from "../components/UploadSong";
 import EditSongInfo from "../components/EditSongInfo";
+import Logo from "../assets/images/Logo.svg";
+
 export default function UserPage() {
   const [getUser, setGetUser] = useState("");
   const [error, setError] = useState(null);
@@ -21,6 +23,7 @@ export default function UserPage() {
   const [showUploadSongModal, setShowUploadSongModal] = useState(false);
   const [showEditSongForm, setShowEditSongForm] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const navigate = useNavigate();
   const logoutRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -29,8 +32,10 @@ export default function UserPage() {
     getCurrentUser()
       .then((data) => {
         setGetUser(data.data);
+        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         setError(error.message || "Login failed");
       });
   }, [successMessage]);
@@ -79,8 +84,9 @@ export default function UserPage() {
   const handleLogout = () => {
     logoutUser()
       .then(() => {
+        localStorage.setItem("isAuthenticated", false);
         navigate("/login");
-        localStorage.setItem("loggedOut", true);
+        window.location.reload();
       })
       .catch((error) => {
         setError(error.message || "Logout failed");
@@ -159,6 +165,16 @@ export default function UserPage() {
 
   return (
     <div className="text-white">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="animate-pulse max-w-3/4"
+            style={{ width: "50%", height: "auto" }}
+          />
+        </div>
+      )}
       {error && error !== "No Songs are availabe" && (
         <h1 className="text-red-500">{error}</h1>
       )}

@@ -6,21 +6,24 @@ import NotFound from "../assets/images/NotFound.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
-
+import Logo from "../assets/images/Logo.svg";
 export default function Favorite() {
   const [songs, setSongs] = useState([]);
   const [likeStatus, setLikeStatus] = useState(true); // corrected variable name
   const [error, setError] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     getAllLikedSong()
       .then((data) => {
+        setLoading(false);
         setSongs(data.data);
         setLikeStatus(true); // corrected variable name
       })
       .catch((error) => {
+        setLoading(false);
         setError(error.message);
         console.log("Error from our side! Please refresh.");
       });
@@ -54,7 +57,17 @@ export default function Favorite() {
   }
 
   return (
-    <div className="text-white">
+    <div className="text-white relative">
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <img
+            src={Logo}
+            alt="Logo"
+            className="animate-pulse max-w-3/4"
+            style={{ width: "50%", height: "auto" }}
+          />
+        </div>
+      )}
       <div className="mt-28 ml-16 flex">
         <img src={LikedSongs} alt="" />
         <span className="flex flex-col">

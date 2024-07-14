@@ -10,6 +10,7 @@ import ListenLater from "./pages/ListenLater";
 import UserPage from "./pages/UserPage";
 import Radio from "./pages/Radio";
 import ArtistProfile from "./pages/ArtistProfile";
+import PageNotFound from "./pages/PageNotFound";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/radio" element={<Radio />} />
             <Route path="/user" element={<UserPage />} />
             <Route path="/c/:username" element={<ArtistProfile />} />
+            <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
       </div>

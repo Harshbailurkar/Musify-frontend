@@ -9,11 +9,23 @@ const Layout = () => {
     const savedState = localStorage.getItem("isSidebarCollapsed");
     return savedState ? JSON.parse(savedState) : false;
   });
-  const loggedIn = localStorage.getItem("loggedIn");
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthenticated") === "true"
+  );
+
+  useEffect(() => {
+    const authState = localStorage.getItem("isAuthenticated") === "true";
+    setIsAuthenticated(authState);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("isSidebarCollapsed", JSON.stringify(isCollapsed));
+    window.dispatchEvent(new CustomEvent("isSidebarCollapsedChange"));
   }, [isCollapsed]);
+
+  useEffect(() => {
+    console.log("isAuthenticated state changed:", isAuthenticated);
+  }, [isAuthenticated]);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -32,15 +44,15 @@ const Layout = () => {
         </main>
       </div>
       <footer
-        className={`flex-1 p-4 pb-0 pl-1 pr-0 mb-20 overflow-y-auto ${
-          isCollapsed ? "ml-28" : "ml-64"
-        }`}
+        className={`flex-1 p-4 pb-0 pl-1 pr-0 ${
+          isAuthenticated ? "mb-20" : "mb-0"
+        } overflow-y-auto ${isCollapsed ? "ml-28" : "ml-64"}`}
       >
         <Footer />
       </footer>
       {
         /* Music Player fixed at the bottom */
-        loggedIn && (
+        isAuthenticated && (
           <div
             className={`fixed bottom-0 w-[full-64] ${
               isCollapsed ? "ml-28" : "ml-64"
