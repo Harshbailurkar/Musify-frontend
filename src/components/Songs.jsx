@@ -3,7 +3,7 @@ import { FaPlay } from "react-icons/fa";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
-
+import Logo from "../assets/images/logo.png";
 const formatLikes = (likes) => {
   if (likes >= 1000000000) {
     return (likes / 1000000000).toFixed(1) + "B";
@@ -46,13 +46,20 @@ const Song = ({
       <div className="relative w-32 h-32 flex items-center justify-center mt-4">
         <img
           className="w-full h-full object-cover rounded-lg"
-          src={thumbnail}
+          src={thumbnail ? thumbnail : Logo}
           alt={songName}
         />
         <button
           className="absolute bottom-0 right-0  w-12 h-12 m-2 bg-green-500 text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           onClick={(e) =>
-            handlePlayButton(e, id, url, songName, uploadedBy, thumbnail)
+            handlePlayButton(
+              e,
+              id,
+              url,
+              songName,
+              uploadedBy,
+              thumbnail || Logo
+            )
           }
         >
           <FaPlay />

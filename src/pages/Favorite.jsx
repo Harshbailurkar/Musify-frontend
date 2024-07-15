@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import Logo from "../assets/images/Logo.svg";
+import logo from "../assets/images/logo.png";
 export default function Favorite() {
   const [songs, setSongs] = useState([]);
   const [likeStatus, setLikeStatus] = useState(true); // corrected variable name
@@ -93,13 +94,13 @@ export default function Favorite() {
                     song.songUrl,
                     song.title,
                     song.owner,
-                    song.ThumbnailUrl
+                    song.ThumbnailUrl || logo
                   )
                 }
               >
                 <div className="flex items-center">
                   <img
-                    src={song.ThumbnailUrl}
+                    src={song.ThumbnailUrl || logo}
                     alt=""
                     className="w-10 h-10 rounded-md mx-2"
                   />

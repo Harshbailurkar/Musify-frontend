@@ -23,6 +23,7 @@ import {
 } from "../API/playlistAPI";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
+import logo from "../assets/images/logo.png";
 import Logo from "../assets/images/Logo.svg";
 export default function Playlist() {
   const navigate = useNavigate();
@@ -120,7 +121,7 @@ export default function Playlist() {
               content: {
                 element: "div",
                 attributes: {
-                  innerHTML: `<div style="background-color: rgb(21, 21, 21); color: white; padding: 10px; font-size: larger">
+                  innerHTML: `<div style="padding: 10px; font-size: larger">
                               Poof! Your playlist has been deleted!
                             </div>`,
                 },
@@ -249,6 +250,9 @@ export default function Playlist() {
   const handlePlaySong = (url, songName, uploadedBy, thumbnail) => {
     dispatch(setMusicData({ url, songName, uploadedBy, thumbnail })); // corrected parameter name id to title
   };
+  const handlePlayPlaylist = (index) => {
+    dispatch(setMusicData(playlists[index].songs));
+  };
   if (error === "Login required") {
     navigate("/login");
     return null;
@@ -270,6 +274,7 @@ export default function Playlist() {
           />
         </div>
       )}
+      {/* playlist creation*/}
       <div
         className={`main-content ${showPlaylistCreationForm ? "blur-sm" : ""}`}
       >
@@ -328,14 +333,14 @@ export default function Playlist() {
         <span className="text-white px-10">No playlists found.</span>
       ) : (
         <div>
-          {playlists.map((playlist) => (
+          {playlists.map((playlist, index) => (
             <div
               key={playlist._id}
               className="text-white px-10 p-5 border border-gray-700 rounded mb-2 cursor-pointer"
             >
               <span
                 className="flex items-center justify-between"
-                onClick={() => handlePlaylistClick(playlist._id)}
+                onClick={() => handlePlaylistClick(playlist._id, index)}
               >
                 <span className="text-lg flex items-center">
                   <span className="pr-4">
@@ -347,7 +352,17 @@ export default function Playlist() {
                   </span>
 
                   {playlist.name}
+                  <button
+                    className="bg-green-800 hover:bg-green-600 rounded text-white p-1 mx-2 text-sm"
+                    onClick={(e) => {
+                      handlePlayPlaylist(index);
+                      e.stopPropagation();
+                    }}
+                  >
+                    play
+                  </button>
                 </span>
+
                 <div className="flex space-x-2">
                   <span
                     className="hover:bg-musify-dark py-2 rounded cursor-pointer hover:border hover:border-gray-600  text-gray-400 hover:text-white"
@@ -399,13 +414,13 @@ export default function Playlist() {
                               song.songUrl,
                               song.title,
                               song.owner,
-                              song.ThumbnailUrl
+                              song.ThumbnailUrl || logo
                             )
                           }
                         >
                           <span className="flex items-center  ">
                             <img
-                              src={song.ThumbnailUrl}
+                              src={song.ThumbnailUrl || logo}
                               alt={song.title}
                               className="w-12 h-12 mr-4"
                             />

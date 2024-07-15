@@ -8,7 +8,7 @@ import { getAllLikedSong } from "../API/favoriteAPI";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import Logo from "../assets/images/Logo.svg";
-
+import logo from "../assets/images/logo.png";
 const SearchPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -224,13 +224,13 @@ const SearchPage = () => {
                       result.songUrl,
                       result.title,
                       result.owner,
-                      result.ThumbnailUrl
+                      result.ThumbnailUrl || logo
                     );
                     handleShowDescriptionOfSong(result._id);
                   }}
                 >
                   <img
-                    src={result.ThumbnailUrl}
+                    src={result.ThumbnailUrl || logo}
                     alt={result.title}
                     className="w-10 h-10"
                   />

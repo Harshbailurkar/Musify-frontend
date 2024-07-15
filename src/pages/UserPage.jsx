@@ -9,6 +9,7 @@ import EditProfile from "../components/EditProfile";
 import UploadSong from "../components/UploadSong";
 import EditSongInfo from "../components/EditSongInfo";
 import Logo from "../assets/images/Logo.svg";
+import logo from "../assets/images/logo.png";
 
 export default function UserPage() {
   const [getUser, setGetUser] = useState("");
@@ -360,7 +361,7 @@ export default function UserPage() {
                   </div>
                   <div className="flex flex-col ">
                     <img
-                      src={song.ThumbnailUrl}
+                      src={song.ThumbnailUrl || logo}
                       alt=""
                       className="w-full h-44 rounded-md "
                     />

@@ -10,6 +10,7 @@ import Logo from "../assets/images/Logo.svg";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import SongDescription from "../components/SongDescription";
+import logo from "../assets/images/logo.png";
 
 export default function ArtistProfile() {
   const { username } = useParams();
@@ -212,7 +213,7 @@ export default function ArtistProfile() {
                 >
                   <div className="flex flex-col ">
                     <img
-                      src={song.ThumbnailUrl}
+                      src={song.ThumbnailUrl ? song.ThumbnailUrl : logo}
                       alt=""
                       className="w-full h-40 rounded-md "
                     />

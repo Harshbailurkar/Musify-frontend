@@ -7,12 +7,14 @@ import VolumeBar from "./VolumeBar";
 import { useSelector } from "react-redux";
 
 const MusicPlayer = () => {
-  const songObject = useSelector((state) => state.musicData);
-  const [currentSongs, setCurrentSongs] = useState([songObject]);
+  const songData = useSelector((state) => state.musicData);
+  const [currentSongs, setCurrentSongs] = useState(
+    Array.isArray(songData) ? songData : [songData]
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [activeSong, setActiveSong] = useState(songObject);
+  const [activeSong, setActiveSong] = useState(currentSongs[0]);
   const [duration, setDuration] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [appTime, setAppTime] = useState(0);
@@ -43,19 +45,38 @@ const MusicPlayer = () => {
 
   // Effect to handle songObject change
   useEffect(() => {
-    const songData = [songObject];
-    setCurrentSongs(songData);
+    setCurrentSongs(Array.isArray(songData) ? songData : [songData]);
     setCurrentIndex(0);
-    setActiveSong(songObject);
+    setActiveSong(Array.isArray(songData) ? songData[0] : songData);
     setIsActive(true);
     setIsPlaying(true); // Start playing the new song
-  }, [songObject]);
+  }, [songData]);
+
+  const getSongUrl = (song) => {
+    if (song && (song.url || song.songUrl)) {
+      return song.url || song.songUrl;
+    }
+    return "";
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      const songUrl = getSongUrl(activeSong);
+      audioRef.current.src = songUrl;
+      audioRef.current.load();
+      if (isPlaying) {
+        audioRef.current.play().catch((error) => {});
+      }
+    }
+  }, [activeSong]);
 
   useEffect(() => {
     if (isPlaying && audioRef.current) {
-      audioRef.current.play(); // Play the audio when isPlaying is true
+      audioRef.current.play().catch((error) => {});
+    } else if (audioRef.current) {
+      audioRef.current.pause();
     }
-  }, [isPlaying, activeSong]);
+  }, [isPlaying]);
 
   const handlePlayPause = () => {
     if (!isActive) return;
@@ -64,15 +85,21 @@ const MusicPlayer = () => {
   };
 
   const handleNextSong = () => {
-    setIsPlaying(false);
-
-    if (!shuffle) {
-      setCurrentIndex((currentIndex + 1) % currentSongs.length);
+    if (currentIndex === currentSongs.length - 1) {
+      // If the current song is the last one, stop playing
+      setIsPlaying(false);
     } else {
-      setCurrentIndex(Math.floor(Math.random() * currentSongs.length));
-    }
+      const nextIndex = shuffle
+        ? Math.floor(Math.random() * currentSongs.length)
+        : (currentIndex + 1) % currentSongs.length;
+      setIsPlaying(false);
 
-    setActiveSong(currentSongs[currentIndex]);
+      setTimeout(() => {
+        setCurrentIndex(nextIndex);
+        setActiveSong(currentSongs[nextIndex]);
+        setIsPlaying(true);
+      }, 1000);
+    }
   };
 
   const handlePrevSong = () => {
@@ -83,8 +110,12 @@ const MusicPlayer = () => {
     } else {
       setCurrentIndex(currentIndex - 1);
     }
+    setIsPlaying(false);
 
-    setActiveSong(currentSongs[currentIndex]);
+    setTimeout(() => {
+      setActiveSong(currentSongs[currentIndex]);
+      setIsPlaying(true);
+    }, 1000);
   };
 
   return (

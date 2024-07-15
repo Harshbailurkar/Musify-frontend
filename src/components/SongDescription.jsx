@@ -9,6 +9,7 @@ import SearchPlaylist from "./SelectPlaylist";
 import { IoShareOutline } from "react-icons/io5";
 import { TbUserShare } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import Logo from "../assets/images/logo.png";
 
 const SongDescription = ({
   id,
@@ -138,7 +139,7 @@ const SongDescription = ({
         <div className="w-64 h-64 flex-col items-center justify-center mt-4">
           <img
             className="w-full h-full object-cover rounded-lg"
-            src={thumbnail}
+            src={thumbnail ? thumbnail : Logo}
             alt={title}
           />
         </div>

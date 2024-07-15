@@ -10,6 +10,7 @@ import { CiSquareRemove } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import Logo from "../assets/images/Logo.svg";
+import logo from "../assets/images/logo.png";
 export default function ListenLater() {
   const navigate = useNavigate();
   const [listenLaterSongs, setListenLaterSongs] = useState([]);
@@ -109,13 +110,13 @@ export default function ListenLater() {
                     song.songUrl,
                     song.title,
                     song.owner,
-                    song.ThumbnailUrl
+                    song.ThumbnailUrl || logo
                   )
                 }
               >
                 <div className="flex items-center">
                   <img
-                    src={song.ThumbnailUrl}
+                    src={song.ThumbnailUrl || logo}
                     alt=""
                     className="w-10 h-10 rounded-md mx-2"
                   />
