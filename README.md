@@ -17,7 +17,7 @@ Check out the live demo of Musify [here](https://musifyharshbailurkar.netlify.ap
 
 ## Requirements
 
-- Node.js v19
+- Node.js v19+
 - A running instance of the [Musify Backend](https://github.com/Harshbailurkar/Musify-Backend)
 
 ## Installation
