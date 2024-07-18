@@ -25,6 +25,8 @@ import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import logo from "../assets/images/logo.png";
 import Logo from "../assets/images/Logo.svg";
+import ShareToolTip from "../components/ShareToolTip";
+
 export default function Playlist() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
@@ -39,6 +41,8 @@ export default function Playlist() {
   const [currentPlaylistId, setCurrentPlaylistId] = useState(null);
   const [showEditTooltip, setShowEditTooltip] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [showShareToolTip, setShowShareToolTip] = useState(false);
+  const [link, setLink] = useState(null);
   const dispatch = useDispatch();
 
   const fetchPlaylists = async () => {
@@ -180,7 +184,8 @@ export default function Playlist() {
   };
 
   const handleSharePlaylist = (playlistId) => {
-    alert(`http://localhost:8000/api/v1/playlists/user/${playlistId}`);
+    const link = `${window.location.origin}/user/${playlistId}`;
+    setLink(link);
   };
 
   const handleUpdatePlaylist = async (playlistId) => {
@@ -218,7 +223,7 @@ export default function Playlist() {
         }
       });
     } catch (err) {
-      alert(error);
+      console.log(err);
     }
   };
   const moveSongToTop = async (playlistId, songId) => {
@@ -265,7 +270,7 @@ export default function Playlist() {
   return (
     <div className="relative">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img
             src={Logo}
             alt="Logo"
@@ -353,7 +358,7 @@ export default function Playlist() {
 
                   {playlist.name}
                   <button
-                    className="bg-green-800 hover:bg-green-600 rounded text-white p-1 mx-2 text-sm"
+                    className="bg-green-800 hover:bg-green-600 rounded text-white p-1 mx-3 text-sm"
                     onClick={(e) => {
                       handlePlayPlaylist(index);
                       e.stopPropagation();
@@ -366,9 +371,10 @@ export default function Playlist() {
                 <div className="flex space-x-2">
                   <span
                     className="hover:bg-musify-dark py-2 rounded cursor-pointer hover:border hover:border-gray-600  text-gray-400 hover:text-white"
-                    onClick={() =>
-                      handlePlaylistUpdateForm(playlist._id, playlist.name)
-                    }
+                    onClick={(e) => {
+                      handlePlaylistUpdateForm(playlist._id, playlist.name);
+                      e.stopPropagation();
+                    }}
                   >
                     <HiOutlinePencil
                       className="mx-2 cursor-pointer"
@@ -377,7 +383,11 @@ export default function Playlist() {
                   </span>
                   <span
                     className="hover:bg-musify-dark py-2 rounded cursor-pointer hover:border hover:border-gray-600 text-gray-400 hover:text-white"
-                    onClick={() => handleSharePlaylist(playlist._id)}
+                    onClick={(e) => {
+                      setShowShareToolTip((prev) => !prev);
+                      handleSharePlaylist(playlist._id);
+                      e.stopPropagation();
+                    }}
                   >
                     <IoIosShareAlt className="mx-2 cursor-pointer" size={20} />
                   </span>
@@ -428,19 +438,23 @@ export default function Playlist() {
                           </span>
                           <div
                             className="mr-10"
-                            onClick={() => handlePlayListSongOptions(song._id)}
+                            onClick={(e) => {
+                              handlePlayListSongOptions(song._id);
+                              e.stopPropagation();
+                            }}
                           >
                             <HiOutlineDotsHorizontal size={20} />
                             {showEditTooltip === song._id && (
                               <div className="absolute top-10 right-0 mt-2 w-40 bg-musify-dark text-white p-2 rounded shadow-lg z-10 border border-gray-600 ">
                                 <button
                                   className="w-full text-left p-1 border hover:bg-neutral-950  border-b-gray-600 border-x-0 border-t-0"
-                                  onClick={() =>
+                                  onClick={(e) => {
                                     handleRemoveSongFromPlaylist(
                                       playlist._id,
                                       song._id
-                                    )
-                                  }
+                                    );
+                                    e.stopPropagation();
+                                  }}
                                 >
                                   <span className="flex items-center">
                                     <HiOutlineTrash
@@ -531,6 +545,15 @@ export default function Playlist() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {showShareToolTip && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 ml-24">
+          <ShareToolTip
+            link={link}
+            Close={() => setShowShareToolTip(false)}
+            className="fixed top-1/2 left-1/2 mb-4 mr-4"
+          />
         </div>
       )}
     </div>

@@ -167,7 +167,7 @@ export default function UserPage() {
   return (
     <div className="text-white">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img
             src={Logo}
             alt="Logo"

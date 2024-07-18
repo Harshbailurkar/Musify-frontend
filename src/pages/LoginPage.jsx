@@ -1,5 +1,5 @@
 import React from "react";
-import { loginUser } from "../API/userAPI.js";
+import { loginUser, SignInWithGoogle } from "../API/userAPI.js";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import Logo from "../assets/images/Logo.svg";
@@ -20,7 +20,9 @@ export default function LoginPage() {
     loginUser(loginData)
       .then((data) => {
         setStatus("idle");
-        navigate("/");
+        const RedirectTo = sessionStorage.getItem("redirectAfterLogin") || "/";
+        sessionStorage.removeItem("redirectAfterLogin");
+        navigate(RedirectTo);
         window.location.reload();
         localStorage.setItem("isAuthenticated", true);
       })
@@ -38,10 +40,22 @@ export default function LoginPage() {
       [name]: value,
     }));
   };
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log(result);
+      const token = await result.user.getIdToken();
+      const response = await SignInWithGoogle(token);
+      const userData = await response.json();
+      console.log("User Data:", userData);
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center self-center ">
-      <div className="items-center text-center mt-24">
+      <div className="items-center text-center mt-10">
         <div className="w-auto">
           <img src={Logo} alt="Musify" className="w-full" />
         </div>
@@ -70,10 +84,12 @@ export default function LoginPage() {
             >
               {status === "submitting" ? "Logging in..." : "Login"}
             </button>
+            <h1 className="text-lg text-white">or</h1>
           </div>
         </form>
+
         {error && <p className="text-red-500">{error}</p>}
-        <h3 className="text-white">
+        <h3 className="text-white mt-2">
           Don't have an account?{" "}
           <NavLink to="/register" className="text-blue-600">
             {" "}

@@ -107,10 +107,14 @@ export default function RegisterPage() {
             >
               {status === "submitting" ? "Creating ..." : "Create Account"}
             </button>
+            <h1 className="mb-1">or</h1>
+            <button type="button" class="login-with-google-btn">
+              Continue with Google
+            </button>
           </div>
         </form>
 
-        <h3>
+        <h3 className="mt-2">
           Already have an account?{" "}
           <NavLink to="/login" className="text-blue-600">
             Login

@@ -49,17 +49,14 @@ const Player = ({
   };
 
   return (
-    <div>
-      <audio
-        ref={audioRef}
-        src={songUrl}
-        onEnded={onEnded}
-        onTimeUpdate={onTimeUpdate}
-        onLoadedData={onLoadedData}
-        loop={repeat}
-      />
-      <button onClick={handlePlay}>Play</button>
-    </div>
+    <audio
+      ref={audioRef}
+      src={songUrl}
+      onEnded={onEnded}
+      onTimeUpdate={onTimeUpdate}
+      onLoadedData={onLoadedData}
+      loop={repeat}
+    />
   );
 };
 

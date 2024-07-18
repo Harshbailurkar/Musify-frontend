@@ -57,7 +57,7 @@ export async function getSongById(songId) {
         throw new Error("Bad request. Please check the owner parameter.");
       } else if (error.response.status === 401) {
         localStorage.setItem("isAuthenticated", false);
-        throw new Error("Login required");
+        throw new Error("Login Required");
       } else {
         throw new Error(
           error.response.data.message || "Network response was not ok"

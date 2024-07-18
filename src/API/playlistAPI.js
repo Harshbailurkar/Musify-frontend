@@ -214,3 +214,19 @@ export async function moveSongToBottomInPlaylist(playlistId, songId) {
     }
   }
 }
+export async function getPlaylistById(playlistId) {
+  try {
+    const response = await axiosInstance.get(`/playlists/user/${playlistId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response.status === 400) {
+      throw new Error("invalid request");
+    } else if (error.response.status == 401) {
+      throw new Error("Login Required");
+    } else if (error.response.status === 404) {
+      throw new Error("Playlist Not Found");
+    } else {
+      throw new Error("Network request failed");
+    }
+  }
+}

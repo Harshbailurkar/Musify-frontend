@@ -147,3 +147,21 @@ export async function updatePassword(passwordData) {
     throw error.response ? error.response.data : new Error("Failed to update");
   }
 }
+
+export async function SignInWithGoogle(token) {
+  try {
+    const response = await axiosInstance.post(
+      "/users/login/google",
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error("Failed to login");
+  }
+}

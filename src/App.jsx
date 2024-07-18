@@ -11,8 +11,12 @@ import UserPage from "./pages/UserPage";
 import Radio from "./pages/Radio";
 import ArtistProfile from "./pages/ArtistProfile";
 import PageNotFound from "./pages/PageNotFound";
+import SharedPlaylist from "./pages/SharedPlaylist";
+import SharedSong from "./pages/SharedSong";
 import { useEffect } from "react";
+
 export default function App() {
+  //prevent default context menu from appearing when the user right-clicks anywhere on the webpage
   useEffect(() => {
     const handleContextMenu = (event) => {
       event.preventDefault();
@@ -37,6 +41,8 @@ export default function App() {
             <Route path="/radio" element={<Radio />} />
             <Route path="/user" element={<UserPage />} />
             <Route path="/c/:username" element={<ArtistProfile />} />
+            <Route path="/user/:playlistId" element={<SharedPlaylist />} />
+            <Route path="/songid/:songId" element={<SharedSong />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

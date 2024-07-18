@@ -10,6 +10,7 @@ import { IoShareOutline } from "react-icons/io5";
 import { TbUserShare } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
+import ShareToolTip from "./ShareToolTip";
 
 const SongDescription = ({
   id,
@@ -33,6 +34,8 @@ const SongDescription = ({
   const [error, setError] = useState(null);
   const [showAddToPlaylistOption, setShowAddToPlaylistOption] = useState(false);
   const [showOtherOptions, setShowOtherOptions] = useState(false);
+  const [link, setLink] = useState(null);
+  const [showShareToolTip, setShowShareToolTip] = useState(false);
   const searchPlaylistRef = useRef(null); // Ref for SearchPlaylist component
   const navigate = useNavigate();
 
@@ -98,6 +101,10 @@ const SongDescription = ({
   const goToUserProfile = (username) => {
     navigate(`/c/${username}`);
   };
+  const handleShareSong = () => {
+    const link = `${window.location.origin}/songid/${id}`;
+    setLink(link);
+  };
 
   return (
     <div className="fixed top-3 right-0 bottom-20">
@@ -122,7 +129,13 @@ const SongDescription = ({
                 <TbUserShare size={20} className="mx-1" />
                 Go to {uploadedBy}
               </button>
-              <button className="flex items-center mt-2 text-gray-300 hover:text-white">
+              <button
+                className="flex items-center mt-2 text-gray-300 hover:text-white"
+                onClick={() => {
+                  handleShareSong();
+                  setShowShareToolTip(true);
+                }}
+              >
                 <IoShareOutline size={20} className="mx-1" />
                 Share
               </button>
@@ -211,6 +224,15 @@ const SongDescription = ({
                     success={onSuccess}
                   />
                 </div>
+              </div>
+            )}
+            {showShareToolTip && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 ml-24">
+                <ShareToolTip
+                  link={link}
+                  Close={() => setShowShareToolTip(false)}
+                  className="fixed top-1/2 left-1/2 mb-4 mr-4"
+                />
               </div>
             )}
           </div>
