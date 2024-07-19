@@ -20,20 +20,6 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const iconRef = useRef(null);
 
-  const getCookie = (name) => {
-    const cookieString = document.cookie;
-    console.log("All cookies:", cookieString); // Log all cookies to verify their presence
-    const cookies = cookieString.split(";");
-    for (let cookie of cookies) {
-      cookie = cookie.trim(); // Remove leading/trailing spaces
-      const [cookieName, cookieValue] = cookie.split("=");
-      if (cookieName === name) {
-        return decodeURIComponent(cookieValue);
-      }
-    }
-    return null;
-  };
-
   useEffect(() => {
     getCurrentUser()
       .then((data) => {
@@ -104,7 +90,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
                   to="/"
                   className={({ isActive }) =>
                     isActive
-                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      ? "font-bold flex flex-row items-center underline underline-offset-8 "
                       : "flex flex-row items-center"
                   }
                 >

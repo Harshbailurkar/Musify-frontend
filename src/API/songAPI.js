@@ -105,7 +105,6 @@ export async function uploadSong(formData) {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("This is response" + response.data);
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -163,7 +162,12 @@ export async function updateSong(songId, formData) {
   try {
     const response = await axiosInstance.patch(
       `/songs/update-song/${songId}`,
-      formData
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response.data;
   } catch (e) {

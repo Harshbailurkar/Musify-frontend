@@ -28,9 +28,8 @@ const SongDescription = ({
   const isLongTitle = title.length + artist.length > 15;
   const isLongArtist = artist.length > 15;
   const isTitleLong = title.length > 55;
+  const isAlbumLong = album.length > 15;
   const [liked, setLiked] = useState(isLiked);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(new Audio(songUrl));
   const [error, setError] = useState(null);
   const [showAddToPlaylistOption, setShowAddToPlaylistOption] = useState(false);
   const [showOtherOptions, setShowOtherOptions] = useState(false);
@@ -108,7 +107,7 @@ const SongDescription = ({
 
   return (
     <div className="fixed top-3 right-0 bottom-20">
-      <div className="bg-musify-dark text-white flex flex-col rounded-xl items-center p-6 pb-10 relative max-h-full min-h-0">
+      <div className="bg-musify-dark text-white flex flex-col rounded-xl items-center p-6 pb-10 relative max-h-full min-h-0 border border-gray-800 shadow-inner shadow-gray-700">
         {/* Header */}
         <div className="flex items-center">
           <div className={`sliding-container ${isLongTitle ? "sliding" : ""}`}>
@@ -172,7 +171,9 @@ const SongDescription = ({
             <div
               className={`sliding-container ${isLongArtist ? "sliding" : ""}`}
             >
-              <div className="sliding-text flex">
+              <div
+                className={`${isLongArtist ? "title-sliding-text" : "flex"} `}
+              >
                 <p className=" text-gray-300">Artist: {artist}</p>
               </div>
             </div>
@@ -184,8 +185,8 @@ const SongDescription = ({
               )}
             </div>
           </span>
-          <div className={`sliding-container ${isLongArtist ? "sliding" : ""}`}>
-            <div className="sliding-text flex">
+          <div className={`sliding-container ${isAlbumLong ? "sliding" : ""}`}>
+            <div className={`${isAlbumLong ? "title-sliding-text" : "flex"} `}>
               <p className=" text-gray-300">Album: {album}</p>
             </div>
           </div>

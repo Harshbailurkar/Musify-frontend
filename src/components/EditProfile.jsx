@@ -53,10 +53,8 @@ const EditProfile = ({ onClose, user, onSuccess }) => {
         break;
       case "avatar":
         if (avatarFile) {
-          console.log("avatar file: ", avatarFile);
           updateAvatar(avatarFile)
             .then((response) => {
-              console.log(response);
               if (response.success) {
                 onSuccess("Avatar updated successfully");
                 onClose();
