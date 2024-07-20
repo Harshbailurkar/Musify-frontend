@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import { FaPlay } from "react-icons/fa";
+import logo from "../assets/images/logo.png";
 
 export default function SharedSong() {
   const { songId } = useParams();
@@ -41,7 +42,7 @@ export default function SharedSong() {
         </h1>
         <div className="relative flex items-center justify-center mt-4">
           <img
-            src={song?.ThumbnailUrl}
+            src={song?.ThumbnailUrl || logo}
             alt="thumbnail"
             className="w-56 h-56 rounded-lg mb-4"
           />
