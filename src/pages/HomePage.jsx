@@ -6,6 +6,7 @@ import { category } from "../assets/constant";
 import SongDescription from "../components/SongDescription";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import Logo from "../assets/images/Logo.svg";
+import { HiArrowNarrowLeft, HiArrowNarrowRight } from "react-icons/hi";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -17,12 +18,16 @@ const HomePage = () => {
   const [likedSongs, setLikedSongs] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
   const [isLoading, setLoading] = useState(true); // State to track loading state
+  const [totalSongs, setTotalSongs] = useState(0);
+
+  const TotalNumberOfpages = Math.ceil(totalSongs / 24);
 
   /* Fetch all songs */
   useEffect(() => {
     const fetchSongs = async () => {
       try {
         const data = await getAllSongs(page);
+        setTotalSongs(data.message);
         setSongs(data.data);
         setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
@@ -32,6 +37,7 @@ const HomePage = () => {
     };
 
     fetchSongs();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]);
 
   /* Fetch all liked songs */
@@ -79,6 +85,94 @@ const HomePage = () => {
     setSuccessMessage(null);
   }, 5000);
 
+  const renderPagination = () => {
+    const pages = [];
+    const showPages = 8;
+
+    if (TotalNumberOfpages <= showPages) {
+      for (let i = 1; i <= TotalNumberOfpages; i++) {
+        pages.push(
+          <button
+            key={i}
+            className={`${
+              i === page
+                ? "bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded m-2"
+                : "bg-slate-200 hover:bg-white text-black px-4 py-2 rounded m-2"
+            }`}
+            onClick={() => setPage(i)}
+          >
+            {i}
+          </button>
+        );
+      }
+    } else {
+      pages.push(
+        <button
+          key={1}
+          className={`${
+            1 === page
+              ? "bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded m-2"
+              : "bg-white text-black px-4 py-2 rounded m-2"
+          }`}
+          onClick={() => setPage(1)}
+        >
+          1
+        </button>
+      );
+
+      if (page > 4) {
+        pages.push(
+          <span key="start-ellipsis" className="px-4 py-2 m-2">
+            ...
+          </span>
+        );
+      }
+
+      const start = Math.max(2, page - 3);
+      const end = Math.min(TotalNumberOfpages - 1, page + 3);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(
+          <button
+            key={i}
+            className={`${
+              i === page
+                ? "bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded"
+                : "bg-white text-black px-4 py-2 rounded"
+            }`}
+            onClick={() => setPage(i)}
+          >
+            {i}
+          </button>
+        );
+      }
+
+      if (page < TotalNumberOfpages - 3) {
+        pages.push(
+          <span key="end-ellipsis" className="px-4 py-2">
+            ...
+          </span>
+        );
+      }
+
+      pages.push(
+        <button
+          key={TotalNumberOfpages}
+          className={`${
+            TotalNumberOfpages === page
+              ? "bg-yellow-500 text-white px-4 py-2 rounded"
+              : "bg-white text-black px-4 py-2 rounded"
+          }`}
+          onClick={() => setPage(TotalNumberOfpages)}
+        >
+          {TotalNumberOfpages}
+        </button>
+      );
+    }
+
+    return pages;
+  };
+
   return (
     <div className="flex flex-col flex-1 relative">
       {isLoading && (
@@ -124,7 +218,10 @@ const HomePage = () => {
       </h1>
 
       {/* Songs */}
-      <div className="flex flex-wrap sm:justify-start justify-center p-3">
+      <div
+        className="flex flex-wrap sm:justify-start justify-center p-3"
+        id="songs"
+      >
         {songs.map((song) => (
           <Songs
             key={song._id}
@@ -162,6 +259,28 @@ const HomePage = () => {
           />
         </div>
       )}
+
+      {/* Pagination */}
+      <div className="flex justify-center items-center mt-10">
+        <button
+          className="bg-yellow-700 hover:bg-yellow-500 w-10 h-10 flex justify-center items-center text-white p-2 rounded-full mr-2"
+          onClick={() => setPage((prev) => prev - 1)}
+          disabled={page === 1}
+        >
+          <HiArrowNarrowLeft />
+        </button>
+        {renderPagination()}
+        <button
+          className="bg-yellow-700 hover:bg-yellow-500 text-white px-2 py-2 rounded-full ml-2 w-10 h-10 flex justify-center items-center"
+          onClick={() => {
+            setPage((prev) => prev + 1);
+            window.scrollTo(0, 0);
+          }}
+          disabled={page === TotalNumberOfpages}
+        >
+          <HiArrowNarrowRight />
+        </button>
+      </div>
     </div>
   );
 };
