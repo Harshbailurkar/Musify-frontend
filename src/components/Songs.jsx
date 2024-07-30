@@ -48,6 +48,7 @@ const Song = ({
           className="w-full h-full object-cover rounded-lg"
           src={thumbnail ? thumbnail : Logo}
           alt={songName}
+          draggable="false"
         />
         <button
           className="absolute bottom-0 right-0  w-12 h-12 m-2 bg-green-500 text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"

@@ -71,6 +71,7 @@ export default function ListenLater() {
             alt="Logo"
             className="animate-pulse max-w-3/4"
             style={{ width: "50%", height: "auto" }}
+            draggable="false"
           />
         </div>
       )}
@@ -85,7 +86,12 @@ export default function ListenLater() {
       )}
       {/* Listen Later Hero*/}
       <div className="flex mt-28 ml-16">
-        <img src={ListenLaterGroup} alt="" className="w-44 h-44" />
+        <img
+          src={ListenLaterGroup}
+          alt=""
+          className="w-44 h-44"
+          draggable="false"
+        />
         <span className="flex flex-col">
           <h1 className="text-6xl pl-20 font-bold">Listen Later</h1>
           <h3 className="text-lg pl-20 pt-3">Auto playlist</h3>
@@ -96,7 +102,7 @@ export default function ListenLater() {
       </div>
       {listenLaterSongs.flat().length === 0 ? (
         <span className="flex justify-center flex-col items-center mt-20">
-          <img src={NotFound} alt="" className="w-36 h-36" />
+          <img src={NotFound} alt="" className="w-36 h-36" draggable="false" />
           <h1 className="text-xl pt-4">Your Listen Later list is empty!</h1>
         </span>
       ) : (

@@ -16,7 +16,7 @@ export default function LoginPage() {
   function handleSubmit(e) {
     e.preventDefault();
     setStatus("submitting");
-
+    console.log(loginData);
     loginUser(loginData)
       .then((data) => {
         setStatus("idle");

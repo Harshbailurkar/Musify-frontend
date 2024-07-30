@@ -9,7 +9,7 @@ import SearchBar from "../components/Searchbar";
 import Logo from "../assets/images/Logo.svg";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
-import SongDescription from "../components/SongDescription";
+import SongDescription from "../components/SongDescription.jsx";
 import logo from "../assets/images/logo.png";
 
 export default function ArtistProfile() {
@@ -26,6 +26,7 @@ export default function ArtistProfile() {
   const [successMessage, setSuccessMessage] = React.useState(null);
   const [likedSongs, setLikedSongs] = React.useState([]);
   const [currentSong, setCurrentSong] = React.useState(null);
+
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -181,7 +182,7 @@ export default function ArtistProfile() {
       )}
       {/* songs uploaded by the Artist */}
       <div className="pl-32 pt-16">
-        <h3 className="text-2xl font-semibold">Your songs</h3>
+        <h3 className="text-2xl font-semibold">Songs from {username}</h3>
         {(error && error === "No Songs are available") ||
         getSongList.length === 0 ? (
           <span className="flex justify-center flex-col items-center">

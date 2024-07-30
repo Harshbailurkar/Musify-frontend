@@ -46,7 +46,6 @@ export default function UploadSong({ onClose, onSuccess }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(formData);
     uploadSong(formData)
       .then((response) => {
         if (response.success) {
@@ -58,7 +57,6 @@ export default function UploadSong({ onClose, onSuccess }) {
       })
       .catch((error) => setError("Error :" + error.message + ". Try again"))
       .finally(() => setLoading(false));
-    console.log("Form data: ", formData);
   };
 
   return (

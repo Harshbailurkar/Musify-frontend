@@ -98,6 +98,7 @@ export async function unfollowUser(userId) {
       : new Error("Failed to unfollow user");
   }
 }
+
 export async function getFollowedAccounts() {
   try {
     const response = await axiosInstance.get("/users/followed-channels", {
@@ -122,6 +123,7 @@ export async function updateUserInfo(userInfo) {
     throw error.response ? error.response.data : new Error("Failed to update");
   }
 }
+
 export async function updateAvatar(avatar) {
   const formData = new FormData();
   formData.append("avatar", avatar);
@@ -136,6 +138,7 @@ export async function updateAvatar(avatar) {
     throw error.response ? error.response.data : new Error("Failed to update");
   }
 }
+
 export async function updatePassword(passwordData) {
   try {
     const response = await axiosInstance.post(
@@ -145,6 +148,25 @@ export async function updatePassword(passwordData) {
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error("Failed to update");
+  }
+}
+
+export async function createViewerToken(hostId) {
+  try {
+    const response = await axiosInstance.post(`/users/createvtoken/${hostId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 401) {
+        localStorage.setItem("isAuthenticated", false);
+        throw new Error("Login required");
+      } else {
+        throw new Error(
+          error.response.data.message || "Network response was not ok"
+        );
+      }
+    }
+    throw error.response ? error.response.data : new Error("Failed to create");
   }
 }
 

@@ -153,6 +153,7 @@ const SongDescription = ({
             className="w-full h-full object-cover rounded-lg"
             src={thumbnail ? thumbnail : Logo}
             alt={title}
+            draggable="false"
           />
         </div>
         {/* Song details */}

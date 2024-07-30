@@ -165,7 +165,7 @@ export default function UserPage() {
   }
 
   return (
-    <div className="text-white">
+    <div className="text-white relative">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img
@@ -224,6 +224,7 @@ export default function UserPage() {
             }
             alt=""
             className="rounded-full object-cover w-32 h-32"
+            draggable="false"
           />
         </div>
 
@@ -280,7 +281,20 @@ export default function UserPage() {
         >
           Upload Song
         </button>
+        {getChannelDetails && getChannelDetails.followerCount > 3 && (
+          <button
+            className="btn mx-4 bg-musify-dark hover:bg-red-950 p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
+            onClick={() => {
+              navigate("/live", { state: getUser });
+            }}
+          >
+            start concert
+          </button>
+        )}
       </div>
+
+      {/* Modals */}
+
       {showUploadSongModal && (
         <UploadSong
           onClose={() => setShowUploadSongModal(false)}
@@ -302,7 +316,12 @@ export default function UserPage() {
         {(error && error === "No Songs are available") ||
         getSongList.length === 0 ? (
           <span className="flex justify-center flex-col items-center">
-            <img src={NotFound} alt="" className="w-36 h-36" />
+            <img
+              src={NotFound}
+              alt=""
+              className="w-36 h-36"
+              draggable="false"
+            />
             <h1 className="text-xl pt-4">
               {error ? error : "You haven't uploaded any songs yet!"}
             </h1>

@@ -66,11 +66,12 @@ export default function Favorite() {
             alt="Logo"
             className="animate-pulse max-w-3/4"
             style={{ width: "50%", height: "auto" }}
+            draggable="false"
           />
         </div>
       )}
       <div className="mt-28 ml-16 flex">
-        <img src={LikedSongs} alt="" />
+        <img src={LikedSongs} alt="" draggable="false" />
         <span className="flex flex-col">
           <h1 className="text-6xl pl-20 font-bold">Liked Music</h1>
           <h3 className="text-lg pl-20 pt-3">Auto playlist</h3>
@@ -103,6 +104,7 @@ export default function Favorite() {
                     src={song.ThumbnailUrl || logo}
                     alt=""
                     className="w-10 h-10 rounded-md mx-2"
+                    draggable="false"
                   />
                   <h3 className="text-lg font-semibold pl-2">{song.title}</h3>
                 </div>

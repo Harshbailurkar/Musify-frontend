@@ -1,7 +1,8 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Search from "./pages/Search";
 import Playlist from "./pages/Playlist";
@@ -13,7 +14,9 @@ import ArtistProfile from "./pages/ArtistProfile";
 import PageNotFound from "./pages/PageNotFound";
 import SharedPlaylist from "./pages/SharedPlaylist";
 import SharedSong from "./pages/SharedSong";
-import { useEffect } from "react";
+import GoLive from "./pages/GoLive";
+import LiveConcert from "./pages/LiveConcert";
+import StreamPage from "./pages/StreamPage";
 
 export default function App() {
   //prevent default context menu from appearing when the user right-clicks anywhere on the webpage
@@ -43,6 +46,9 @@ export default function App() {
             <Route path="/c/:username" element={<ArtistProfile />} />
             <Route path="/user/:playlistId" element={<SharedPlaylist />} />
             <Route path="/songid/:songId" element={<SharedSong />} />
+            <Route path="/live" element={<GoLive />} />
+            <Route path="/concerts" element={<LiveConcert />} />
+            <Route path="/stream/:id" element={<StreamPage />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

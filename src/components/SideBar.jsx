@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/Logo.svg";
+import { CgMediaLive } from "react-icons/cg";
+
 import {
   HiOutlineHome,
   HiSearch,
@@ -83,9 +85,9 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
         }`}
       >
         <div>
-          <div className="bg-musify-dark rounded-lg p-2 py-6">
+          <div className="bg-musify-dark rounded-lg p-2 py-3">
             <ul>
-              <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
+              <li className="px-2 py-2 my-2 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
                   to="/"
                   className={({ isActive }) =>
@@ -176,6 +178,23 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
             <ul>
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
+                  to="/concerts"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold flex flex-row items-center underline underline-offset-8"
+                      : "flex flex-row items-center"
+                  }
+                >
+                  <CgMediaLive size={22} />
+                  {!isCollapsed && (
+                    <span className="hidden sm:inline-block ml-2">
+                      Live Concert
+                    </span>
+                  )}
+                </NavLink>
+              </li>
+              <li className="px-2 py-1 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
+                <NavLink
                   to="/radio"
                   className={({ isActive }) =>
                     isActive
@@ -191,7 +210,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               </li>
             </ul>
           </div>
-          <div className="mt-12 ml-2 relative">
+          <div className="mt-10 ml-2 relative">
             {getUser && (
               <div className="flex items-center">
                 <NavLink

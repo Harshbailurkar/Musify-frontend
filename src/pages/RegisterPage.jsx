@@ -42,6 +42,7 @@ export default function RegisterPage() {
         console.log(data);
         setStatus("idle");
         navigate("/");
+        window.location.reload();
       })
       .catch((error) => {
         setError(error.message);

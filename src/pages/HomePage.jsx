@@ -182,6 +182,7 @@ const HomePage = () => {
             alt="Logo"
             className="animate-pulse max-w-3/4"
             style={{ width: "50%", height: "auto" }}
+            draggable="false"
           />
         </div>
       )}

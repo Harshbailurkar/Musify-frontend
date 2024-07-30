@@ -5,6 +5,7 @@ import Seekbar from "./Seekbar";
 import Track from "./Track";
 import VolumeBar from "./VolumeBar";
 import { useSelector } from "react-redux";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const MusicPlayer = () => {
   const songData = useSelector((state) => state.musicData);
@@ -25,7 +26,7 @@ const MusicPlayer = () => {
     localStorage.getItem("isSidebarCollapsed") === "true"
   );
   const audioRef = useRef(null); // Ref for the audio element
-
+  const [showPlayer, setShowPlayer] = useState(true);
   useEffect(() => {
     const handleStorageChange = () => {
       setIsSidebarCollapsed(
@@ -124,7 +125,11 @@ const MusicPlayer = () => {
         isSidebarCollapsed ? "w-11/12" : "w-10/12"
       } z-50 bg-gray-950 text-white p-3 border-t border-gray-800`}
     >
-      <div className="relative sm:px-12 px-8 w-full flex items-center justify-between">
+      <div
+        className={`relative sm:px-12 px-8 w-full flex items-center justify-between ${
+          !showPlayer ? "hidden" : ""
+        }`}
+      >
         <Track
           isPlaying={isPlaying}
           isActive={isActive}
@@ -170,7 +175,19 @@ const MusicPlayer = () => {
           onChange={(event) => setVolume(event.target.value)}
           setVolume={setVolume}
         />
+        <div className="ml-20" onClick={() => setShowPlayer(false)}>
+          <FaChevronDown />
+        </div>
       </div>
+
+      {!showPlayer && (
+        <div
+          className="flex justify-center absolute right-14 bottom-1"
+          onClick={() => setShowPlayer(true)}
+        >
+          <FaChevronUp />
+        </div>
+      )}
     </div>
   );
 };
