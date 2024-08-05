@@ -49,10 +49,19 @@ export default function SharedPlaylist() {
     <div className="text-white">
       <div className="bg-slate-900 p-5">
         <div className="flex items-center">
-          <img src={playlistThumbnail || logo} alt="" className="w-28" />
+          <img
+            src={playlistThumbnail || logo}
+            alt=""
+            className="w-20 md:w-28"
+          />
           <span className="mx-5">
-            <h1 className="text-5xl p-2 font-bold">{playlist?.name}</h1>
-            <h2 className="p-2"> {playlist?.owner?.username}</h2>
+            <h1 className="text-3xl md:text-5xl p-2 font-bold">
+              {playlist?.name}
+            </h1>
+            <h2 className="p-2 text-sm md:text-base">
+              {" "}
+              {playlist?.owner?.username}
+            </h2>
             <button
               className="bg-green-500 text-black mx-5 mt-5 p-4 rounded-full"
               onClick={handlePlayPlaylist}

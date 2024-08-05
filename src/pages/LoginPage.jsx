@@ -16,7 +16,6 @@ export default function LoginPage() {
   function handleSubmit(e) {
     e.preventDefault();
     setStatus("submitting");
-    console.log(loginData);
     loginUser(loginData)
       .then((data) => {
         setStatus("idle");
@@ -47,7 +46,6 @@ export default function LoginPage() {
       const token = await result.user.getIdToken();
       const response = await SignInWithGoogle(token);
       const userData = await response.json();
-      console.log("User Data:", userData);
     } catch (error) {
       console.error("Error during sign-in:", error);
     }

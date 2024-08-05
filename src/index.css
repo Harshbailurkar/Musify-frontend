@@ -61,7 +61,7 @@
 }
 
 .rainbow-border {
-  border-width: 2px;
+  border-width: 3px;
   border-style: solid;
   animation: rainbow-border 5s infinite linear;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adjust the shadow as needed */
@@ -211,4 +211,43 @@ h6 {
     box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
   }
+}
+
+.bg-glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 15%,
+    rgba(235, 0, 255, 0.1) 15%,
+    rgba(255, 0, 214, 0.1) 30%,
+    rgba(0, 0, 0, 0.1) 45%,
+    rgba(217, 217, 217, 0.1) 60%,
+    rgba(219, 0, 255, 0.1) 75%,
+    rgba(255, 0, 245, 0.1) 90%
+  );
+  background-blend-mode: overlay;
+  background-attachment: fixed;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.artist-card {
+  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 15%,
+    rgba(235, 0, 255, 0.1) 15%,
+    rgba(255, 0, 214, 0.1) 30%,
+    rgba(0, 0, 0, 0.1) 45%,
+    rgba(217, 217, 217, 0.1) 60%,
+    rgba(219, 0, 255, 0.1) 75%,
+    rgba(255, 0, 245, 0.1) 90%
+  );
+  background-blend-mode: overlay;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

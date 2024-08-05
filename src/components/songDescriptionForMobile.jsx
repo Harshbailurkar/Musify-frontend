@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
 import ShareToolTip from "./ShareToolTip";
 
-const SongDescription = ({
+const SongDescriptionForMobile = ({
   id,
   close,
   title,
@@ -22,6 +22,7 @@ const SongDescription = ({
   likes,
   album,
   isLiked,
+  songUrl,
   onSuccess,
 }) => {
   const isLongTitle = title.length + artist.length > 15;
@@ -34,7 +35,7 @@ const SongDescription = ({
   const [showOtherOptions, setShowOtherOptions] = useState(false);
   const [link, setLink] = useState(null);
   const [showShareToolTip, setShowShareToolTip] = useState(false);
-  const searchPlaylistRef = useRef(null); // Ref for SearchPlaylist component
+  const searchPlaylistRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,8 +71,8 @@ const SongDescription = ({
 
   const toggleLike = async () => {
     try {
-      await toggleLikeSong(id); // Toggle like status via API
-      setLiked((prevLiked) => !prevLiked); // Toggle liked state locally
+      await toggleLikeSong(id);
+      setLiked((prevLiked) => !prevLiked);
     } catch (error) {
       console.log(error.message);
     }
@@ -105,7 +106,7 @@ const SongDescription = ({
   };
 
   return (
-    <div className="fixed hidden md:block top-3 right-0 bottom-20">
+    <div className="fixed  md:hidden w-11/12 ">
       <div className="bg-musify-dark text-white flex flex-col rounded-xl items-center p-6 pb-10 relative max-h-full min-h-0 border border-gray-800 shadow-inner shadow-gray-700">
         {/* Header */}
         <div className="flex items-center">
@@ -113,6 +114,7 @@ const SongDescription = ({
             <div className="sliding-text">
               {title} by {artist}
             </div>
+            x
           </div>
           <HiOutlineDotsHorizontal
             className="text-2xl mx-2"
@@ -196,7 +198,7 @@ const SongDescription = ({
             <h1 className="text-red-500">{error}</h1>
           )}
           <button
-            className="flex items-center mt-4"
+            className="flex items-center mt-2 md:mt-4"
             onClick={() => {
               AddSongToListenLater(id);
             }}
@@ -206,7 +208,7 @@ const SongDescription = ({
               Add to Listen Later
             </span>
           </button>
-          <div className="relative mt-4">
+          <div className="relative mt-2 md:mt-4">
             <button
               className="flex items-center"
               onClick={handleToggleAddToPlaylist}
@@ -217,7 +219,7 @@ const SongDescription = ({
               </span>
             </button>
             {showAddToPlaylistOption && (
-              <div className="absolute top-full mt-2 w-full left-[-250px]">
+              <div className="absolute top-1 mt-2 w-full">
                 <div ref={searchPlaylistRef}>
                   <SearchPlaylist
                     songId={id}
@@ -228,11 +230,11 @@ const SongDescription = ({
               </div>
             )}
             {showShareToolTip && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 ml-24">
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 md:ml-24">
                 <ShareToolTip
                   link={link}
-                  Close={() => setShowShareToolTip(false)}
-                  className="fixed top-1/2 left-1/2 mb-4 mr-4"
+                  Close={() => setShowShareToolTip((prev) => !prev)}
+                  className="fixed md:top-1/2 left-1/2 mb-4 mr-4"
                 />
               </div>
             )}
@@ -243,4 +245,4 @@ const SongDescription = ({
   );
 };
 
-export default SongDescription;
+export default SongDescriptionForMobile;

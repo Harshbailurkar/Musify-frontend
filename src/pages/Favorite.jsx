@@ -1,5 +1,6 @@
-import { getAllLikedSong, toggleLikeSong } from "../API/favoriteAPI";
 import { useEffect, useState } from "react";
+import { getAllLikedSong, toggleLikeSong } from "../API/favoriteAPI";
+import { getSongById } from "../API/songAPI";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import LikedSongs from "../assets/images/LikedSongs.svg";
 import NotFound from "../assets/images/NotFound.png";
@@ -8,11 +9,15 @@ import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import Logo from "../assets/images/Logo.svg";
 import logo from "../assets/images/logo.png";
+import SongDescription from "../components/SongDescription";
+
 export default function Favorite() {
   const [songs, setSongs] = useState([]);
-  const [likeStatus, setLikeStatus] = useState(true); // corrected variable name
+  const [likeStatus, setLikeStatus] = useState(true);
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [showDescriptionOfSong, setShowDescriptionOfSong] = useState(false);
+  const [currentSong, setCurrentSong] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -21,7 +26,7 @@ export default function Favorite() {
       .then((data) => {
         setLoading(false);
         setSongs(data.data);
-        setLikeStatus(true); // corrected variable name
+        setLikeStatus(true);
       })
       .catch((error) => {
         setLoading(false);
@@ -30,10 +35,11 @@ export default function Favorite() {
       });
   }, [likeStatus]);
 
-  function toggleLike(id) {
+  function toggleLike(e, id) {
+    e.stopPropagation();
     toggleLikeSong(id)
       .then(() => {
-        setLikeStatus((prev) => !prev); // corrected variable name
+        setLikeStatus((prev) => !prev);
       })
       .catch((error) => {
         setError(error.message);
@@ -42,7 +48,7 @@ export default function Favorite() {
   }
 
   const handlePlaySong = (url, songName, uploadedBy, thumbnail) => {
-    dispatch(setMusicData({ url, songName, uploadedBy, thumbnail })); // corrected parameter name id to title
+    dispatch(setMusicData({ url, songName, uploadedBy, thumbnail }));
   };
 
   useEffect(() => {
@@ -50,6 +56,17 @@ export default function Favorite() {
       navigate("/login");
     }
   }, [error, navigate]);
+
+  const handleShowDescriptionOfSong = (songId) => {
+    getSongById(songId)
+      .then((data) => {
+        setCurrentSong(data.data);
+        setShowDescriptionOfSong(true);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
 
   if (error) {
     return (
@@ -70,34 +87,48 @@ export default function Favorite() {
           />
         </div>
       )}
-      <div className="mt-28 ml-16 flex">
-        <img src={LikedSongs} alt="" draggable="false" />
+      <div className="mt-10 md:mt-20 ml-0 md:ml-16 flex justify-center md:justify-start">
+        <img
+          src={LikedSongs}
+          alt=""
+          draggable="false"
+          className="w-28 md:w-44"
+        />
         <span className="flex flex-col">
-          <h1 className="text-6xl pl-20 font-bold">Liked Music</h1>
-          <h3 className="text-lg pl-20 pt-3">Auto playlist</h3>
-          <h3 className="text-lg pl-20 pt-3">{songs.flat().length} songs</h3>
+          <h1 className=" text-2xl md:text-6xl pl-10 md:pl-20 font-bold">
+            Liked Music
+          </h1>
+          <h3 className="text-lg pl-10 md:pl-20 pt-3">Auto playlist</h3>
+          <h3 className="text-lg pl-10 md:pl-20 pt-3">
+            {songs.flat().length} songs
+          </h3>
         </span>
       </div>
       {songs.flat().length === 0 ? (
         <div className="flex justify-center flex-col items-center pt-14">
-          <img src={NotFound} alt="" className="w-36 h-36" />
+          <img
+            src={NotFound}
+            alt=""
+            className="w-20 mt-20 md:mt-10 md:w-36 h-20 md:h-36"
+          />
           <h1 className="text-xl pt-4">Your liked list is empty!</h1>
         </div>
       ) : (
-        <div className="pt-14 ml-16">
+        <div className="pt-14 ml-0 md:ml-16">
           <div className="grid grid-cols-1 gap-2">
             {songs.flat().map((song) => (
               <div
                 key={song._id}
-                className="p-4 flex rounded shadow-md items-center justify-between relative border border-gray-700 cursor-pointer"
-                onClick={() =>
+                className="p-2 md:p-4 flex rounded shadow-md items-center justify-between relative border border-gray-700 cursor-pointer"
+                onClick={() => {
+                  handleShowDescriptionOfSong(song._id);
                   handlePlaySong(
                     song.songUrl,
                     song.title,
                     song.owner,
                     song.ThumbnailUrl || logo
-                  )
-                }
+                  );
+                }}
               >
                 <div className="flex items-center">
                   <img
@@ -109,7 +140,7 @@ export default function Favorite() {
                   <h3 className="text-lg font-semibold pl-2">{song.title}</h3>
                 </div>
                 <button
-                  onClick={() => toggleLike(song._id)}
+                  onClick={(e) => toggleLike(e, song._id)}
                   className="mr-16 text-red-500"
                 >
                   {likeStatus ? (
@@ -121,6 +152,22 @@ export default function Favorite() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+      {currentSong && showDescriptionOfSong && (
+        <div className="fixed bottom-5 right-3">
+          <SongDescription
+            close={() => setShowDescriptionOfSong(false)}
+            id={currentSong._id}
+            title={currentSong.title}
+            thumbnail={currentSong.ThumbnailUrl}
+            artist={currentSong.artist}
+            album={currentSong.album}
+            uploadedBy={currentSong.owner}
+            likes={currentSong.likesCount}
+            songUrl={currentSong.songUrl}
+            isLiked={currentSong.isLiked}
+          />
         </div>
       )}
     </div>

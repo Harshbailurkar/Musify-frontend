@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { IoCopyOutline, IoCopy } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { createStream, createIngress } from "../API/streamAPI";
+import { createStream, createIngress, stopStream } from "../API/streamAPI";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,7 @@ export default function GoLive() {
   const [streamUrlKeyGenBtnText, setStreamUrlKeyGenBtnText] = useState(
     "Generate Stream URL and Key"
   );
-
+  const [clearBtnText, setClearBtnText] = useState("Clear");
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -114,6 +114,17 @@ export default function GoLive() {
     getInputProps: getInputPropsThumbnail,
   } = useDropzone({ onDrop: onDropThumbnail });
 
+  const handleStopStream = (e, id) => {
+    e.preventDefault();
+    setClearBtnText("Clearing...");
+    stopStream(id)
+      .then(() => {
+        setClearBtnText("Cleared");
+      })
+      .catch((error) => {
+        alert("Failed to stop stream: " + error.message);
+      });
+  };
   if (error === "Login required") {
     navigate("/login");
   } else if (error) {
@@ -207,6 +218,16 @@ export default function GoLive() {
                     value={entryFee}
                     onChange={(e) => handleEntryFeeChange(e)}
                   />
+                  <p>
+                    before you start new stream let clear the cache data to
+                    except fresh payment
+                  </p>
+                  <button
+                    className="p-1 rounded m-2 mx-0 bg-red-950 "
+                    onClick={(e) => handleStopStream(e, userInfo._id)}
+                  >
+                    {clearBtnText}
+                  </button>
                 </div>
               )}
             </div>

@@ -33,7 +33,7 @@ export default function ShareToolTip({ link, Close }) {
   };
 
   return (
-    <div className="flex flex-col w-72 relative  bg-gray-950 border border-gray-500text-white p-4 rounded shadow-lg items-center">
+    <div className="flex flex-col w-72 relative  bg-gray-950 border border-gray-500 text-white p-4 rounded shadow-lg items-center">
       <button
         onClick={Close}
         className="absolute top-1 right-2 text-white hover:text-gray-300 focus:outline-none text-2xl pt-1 mb-2"

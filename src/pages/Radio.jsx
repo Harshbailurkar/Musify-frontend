@@ -22,8 +22,8 @@ export default function Radio() {
   return (
     <div className="content text-white">
       <div className="PlaylistsHero">
-        <div className="pt-2 pb-44 ml-16">
-          <div className="ml-4 w-3/4 pt-10">
+        <div className="pt-2 pb-44 ml-0 md:ml-16">
+          <div className="ml:0 md:ml-4 w-full md:w-3/4 py-5 md:pt-10">
             <h1 className="text-4xl font-extrabold">
               Online Live radio from India
             </h1>
@@ -35,7 +35,7 @@ export default function Radio() {
                 return (
                   <div
                     key={radio.id}
-                    className={`flex flex-row items-center justify-between p-4 ${
+                    className={`flex flex-row items-center justify-between p-2 md:p-4 ${
                       currentSongId === radio.id ? "bg-blue-900" : ""
                     }`}
                     onClick={() =>
@@ -52,13 +52,15 @@ export default function Radio() {
                       <img
                         src={radio.image}
                         alt={radio.title}
-                        className="w-16 h-16 rounded-md"
+                        className="w-10 md:w-16 h-10 md:h-16 rounded-md"
                       />
                       <div className="ml-4">
-                        <h2 className="text-xl font-semibold">{radio.title}</h2>
+                        <h2 className=" text-sm md:text-xl font-semibold">
+                          {radio.title}
+                        </h2>
                       </div>
                     </div>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                    <button className="bg-blue-500 text-white px-2 md:px-4 py-1 md:py-2 rounded-md">
                       {isCurrentSongPlaying ? <FaPause /> : <FaPlay />}
                     </button>
                   </div>

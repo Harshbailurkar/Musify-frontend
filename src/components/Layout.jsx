@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import SideBar from "./SideBar";
 import MusicPlayer from "./MusicPlayer/index"; // Adjust the import path as necessary
 import { Outlet } from "react-router-dom";
+import TopBar from "./TopBar";
 
 const Layout = () => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -29,11 +30,12 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        <TopBar toggleSidebar={toggleSidebar} />
         <SideBar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
         <main
           className={`flex-1 p-4 overflow-y-auto ${
-            isCollapsed ? "ml-28" : "ml-64"
+            isCollapsed ? "ml-0 md:ml-28" : "ml-0 md:ml-64"
           }`}
         >
           <Outlet />
@@ -42,7 +44,7 @@ const Layout = () => {
       <footer
         className={`flex-1 p-4 pb-0 pl-1 pr-0 ${
           isAuthenticated ? "mb-20" : "mb-0"
-        } overflow-y-auto ${isCollapsed ? "ml-28" : "ml-64"}`}
+        } overflow-y-auto ${isCollapsed ? "ml-0 md:ml-28" : "ml-0 md:ml-64"}`}
       >
         <Footer />
       </footer>
@@ -51,7 +53,7 @@ const Layout = () => {
         isAuthenticated && (
           <div
             className={`fixed bottom-0 w-[full-64] ${
-              isCollapsed ? "ml-28" : "ml-64"
+              isCollapsed ? "ml-0 md:ml-28" : "ml-0 md:ml-64"
             }`}
           >
             <MusicPlayer />

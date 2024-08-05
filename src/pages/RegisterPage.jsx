@@ -18,7 +18,12 @@ export default function RegisterPage() {
   function validateInput() {
     const { username, password } = registerData;
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
-
+    if (username.length < 3) {
+      return "Username must be greater than 3 characters.";
+    }
+    if (username.length > 16) {
+      return "Username must be less than 16 characters.";
+    }
     if (password.length < 6) {
       return "Password must be greater than 6 characters.";
     }
@@ -42,6 +47,7 @@ export default function RegisterPage() {
         console.log(data);
         setStatus("idle");
         navigate("/");
+        localStorage.setItem("isAuthenticated", true);
         window.location.reload();
       })
       .catch((error) => {
@@ -52,6 +58,7 @@ export default function RegisterPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setRegisterData((prevData) => ({
       ...prevData,
       [name]: value,

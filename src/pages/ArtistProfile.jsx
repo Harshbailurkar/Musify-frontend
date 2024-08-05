@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import SongDescription from "../components/SongDescription.jsx";
 import logo from "../assets/images/logo.png";
+import { toast } from "react-toastify";
 
 export default function ArtistProfile() {
   const { username } = useParams();
@@ -26,9 +27,25 @@ export default function ArtistProfile() {
   const [successMessage, setSuccessMessage] = React.useState(null);
   const [likedSongs, setLikedSongs] = React.useState([]);
   const [currentSong, setCurrentSong] = React.useState(null);
+  const customId = "custom-id-yes";
 
   const dispatch = useDispatch();
-
+  React.useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: customId,
+      });
+      setSuccessMessage(null); // Clear success message to prevent multiple toasts
+    }
+  }, [successMessage]);
   React.useEffect(() => {
     getChannel(username)
       .then((data) => {
@@ -121,20 +138,27 @@ export default function ArtistProfile() {
           />
         </div>
       )}
-      {successMessage && (
-        <div className="progress-bar-wrapper text-center bg-green-500 brightness-75">
-          <h1 className="text-neutral-900">{successMessage}</h1>
-          <div className="progress-bar" />
-        </div>
-      )}
       {error && error !== "No Songs are availabe" && (
         <h1 className="text-red-500">{error}</h1>
       )}
+      {
+        <div className="w-full h-32 md:h-52 ">
+          <div className="bg-gray-800 w-auto h-full md:mx-10 rounded-lg">
+            {channel?.coverPhoto && (
+              <img
+                src={channel.coverPhoto}
+                alt=""
+                className="w-full h-full object-cover rounded-lg"
+              />
+            )}
+          </div>
+        </div>
+      }
       {channel && (
-        <div className="flex pt-20 justify-around items-center">
+        <div className="flex pt-5 justify-around items-center">
           <div className="flex">
             {/* Channel Avatar */}
-            <div className="w-32 h-32">
+            <div className="w-16 md:w-32 h-auto md:h-32">
               <img
                 src={
                   channel?.avatar
@@ -142,18 +166,20 @@ export default function ArtistProfile() {
                     : "https://avatars.githubusercontent.com/u/149575885?v=4"
                 }
                 alt=""
-                className="rounded-full object-cover w-32 h-32"
+                className="rounded-full object-cover mt-5 md:mt-0 w-16 md:w-32 h-auto md:h-32"
               />
             </div>
 
-            <div className="ml-10">
-              <h1 className="text-5xl p-2 font-bold">{channel.fullName}</h1>
+            <div className="ml-5 md:ml-10">
+              <h1 className="text-xl md:text-5xl p-2 font-bold">
+                {channel.fullName}
+              </h1>
               <span className="flex items-center justify-between">
                 <h4 className="pl-2">@{channel.username}</h4>
               </span>
               {/* Followers and following count */}
 
-              <span className="flex pt-1 text-xl">
+              <span className="flex pt-1 text-sm md:text-xl">
                 <h4 className="pl-2 pt-1 px-6">
                   Followers: {channel ? channel.followerCount : "loading..."}
                 </h4>
@@ -165,14 +191,14 @@ export default function ArtistProfile() {
           </div>
           {!isFollowing ? (
             <button
-              className="p-2  bg-purple-600 hover:bg-purple-500 h-12 w-28 rounded"
+              className="p-1 md:p-2 text-sm sm:text-base bg-purple-600 hover:bg-purple-500 md:h-12 md:w-28 rounded"
               onClick={handleFollowToggle}
             >
               <h2>Follow</h2>
             </button>
           ) : (
             <button
-              className="p-2  bg-gray-600 hover:bg-gray-700 h-12 w-28 rounded"
+              className="p-1 md:p-2 text-sm sm:text-base bg-gray-600 hover:bg-gray-700 md:h-12 md:w-28 rounded"
               onClick={handleFollowToggle}
             >
               <h2>Unfollow</h2>
@@ -181,12 +207,18 @@ export default function ArtistProfile() {
         </div>
       )}
       {/* songs uploaded by the Artist */}
-      <div className="pl-32 pt-16">
-        <h3 className="text-2xl font-semibold">Songs from {username}</h3>
+      <div className="pt-5 md:pl-32 md:pt-16">
+        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">
+          Songs from {username}
+        </h3>
         {(error && error === "No Songs are available") ||
         getSongList.length === 0 ? (
           <span className="flex justify-center flex-col items-center">
-            <img src={NotFound} alt="" className="w-36 h-36" />
+            <img
+              src={NotFound}
+              alt=""
+              className="w-20 mt-20 md:mt-10 md:w-36 h-20 md:h-36"
+            />
             <h1 className="text-xl pt-4">
               {error ? error : "No songs uploaded yet!"}
             </h1>
@@ -200,7 +232,7 @@ export default function ArtistProfile() {
             <div className="flex flex-wrap gap-4 pt-10">
               {filteredSongs.map((song) => (
                 <div
-                  className="bg-musify-dark w-48 p-4 flex flex-col flex-wrap rounded shadow-md   relative"
+                  className="bg-musify-dark w-32 md:w-52 p-4 flex flex-col flex-wrap rounded shadow-md   relative"
                   key={song._id}
                   onClick={() => {
                     handlePlaySong(
@@ -216,15 +248,15 @@ export default function ArtistProfile() {
                     <img
                       src={song.ThumbnailUrl ? song.ThumbnailUrl : logo}
                       alt=""
-                      className="w-full h-40 rounded-md "
+                      className="w-full h-22 md:h-44 rounded-md"
                     />
-                    <h3 className="text-lg font-medium pt-2 text-left">
+                    <h3 className="text-base md:text-lg font-medium md:pt-2 text-left">
                       {song.title}
                     </h3>
-                    <h3 className="text-sm font-medium pt-2 text-left">
+                    <h3 className="text-sm font-medium md:pt-2 text-left">
                       from {song.album}
                     </h3>
-                    <h3 className="text-sm font-medium pt-2 text-left">
+                    <h3 className="text-sm font-medium md:pt-2 text-left">
                       Likes :{" " + song.likesCount}
                     </h3>
                   </div>

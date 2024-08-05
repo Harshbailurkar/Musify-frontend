@@ -61,7 +61,16 @@ export async function getChannel(username) {
     throw error.response ? error.response.data : new Error("user not Found");
   }
 }
-
+export async function getMostFollowedChannels() {
+  try {
+    const response = await axiosInstance.get("/users/most-followed-channels");
+    return response.data;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : new Error("Failed to get most followed channels");
+  }
+}
 export async function getCurrentUser() {
   try {
     const response = await axiosInstance.get(`/users/current-user`);
@@ -127,7 +136,6 @@ export async function updateUserInfo(userInfo) {
 export async function updateAvatar(avatar) {
   const formData = new FormData();
   formData.append("avatar", avatar);
-
   try {
     const response = await axiosInstance.patch(
       "/users/change-avatar",
@@ -185,5 +193,18 @@ export async function SignInWithGoogle(token) {
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : new Error("Failed to login");
+  }
+}
+export async function updateCoverImage(coverPhoto) {
+  try {
+    const formData = new FormData();
+    formData.append("coverPhoto", coverPhoto);
+    const response = await axiosInstance.patch(
+      "/users/changecoverphoto",
+      formData
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error("Failed to update");
   }
 }

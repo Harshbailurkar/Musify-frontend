@@ -122,7 +122,7 @@ const MusicPlayer = () => {
   return (
     <div
       className={`fixed bottom-0 right-0 left-auto ${
-        isSidebarCollapsed ? "w-11/12" : "w-10/12"
+        isSidebarCollapsed ? "w-full md:w-11/12" : "w-full md:w-10/12"
       } z-50 bg-gray-950 text-white p-3 border-t border-gray-800`}
     >
       <div

@@ -4,24 +4,36 @@ import Songs from "../components/Songs";
 import { useNavigate } from "react-router-dom";
 import { category } from "../assets/constant";
 import SongDescription from "../components/SongDescription";
+import SongDescriptionForMobile from "../components/songDescriptionForMobile";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import Logo from "../assets/images/Logo.svg";
 import { HiArrowNarrowLeft, HiArrowNarrowRight } from "react-icons/hi";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const HomePage = () => {
   const navigate = useNavigate();
   const [songs, setSongs] = useState([]);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [showDescriptionOfSong, setShowDescriptionOfSong] = useState(false);
+  const [descriptionOfSongForMobile, setDescriptionOfSongForMobile] =
+    useState(false);
   const [currentSong, setCurrentSong] = useState(null);
   const [likedSongs, setLikedSongs] = useState([]);
   const [successMessage, setSuccessMessage] = useState(null);
   const [isLoading, setLoading] = useState(true); // State to track loading state
   const [totalSongs, setTotalSongs] = useState(0);
-
+  const [largeScreen, setLargeScreen] = useState(window.innerWidth >= 768);
   const TotalNumberOfpages = Math.ceil(totalSongs / 24);
-
+  const customId = "custom-id-yes";
+  useEffect(() => {
+    const handleResize = () => {
+      setLargeScreen(window.innerWidth >= 768); // Adjust the width as needed
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   /* Fetch all songs */
   useEffect(() => {
     const fetchSongs = async () => {
@@ -67,6 +79,17 @@ const HomePage = () => {
       });
   };
 
+  const showDescriptionOfSongForMobile = (songId) => {
+    getSongById(songId)
+      .then((data) => {
+        setCurrentSong(data.data);
+        setDescriptionOfSongForMobile(true);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
+
   const isLiked = (songId) => {
     return likedSongs.some((likedArray) =>
       likedArray.some((likedSong) => likedSong._id === songId)
@@ -80,10 +103,6 @@ const HomePage = () => {
       <div className="error text-red-500 text-4xl text-center">{error}</div>
     );
   }
-
-  setTimeout(() => {
-    setSuccessMessage(null);
-  }, 5000);
 
   const renderPagination = () => {
     const pages = [];
@@ -172,6 +191,22 @@ const HomePage = () => {
 
     return pages;
   };
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: customId,
+      });
+      setSuccessMessage(null); // Clear success message to prevent multiple toasts
+    }
+  }, [successMessage]);
 
   return (
     <div className="flex flex-col flex-1 relative">
@@ -187,25 +222,20 @@ const HomePage = () => {
         </div>
       )}
 
-      {successMessage && (
-        <div className="progress-bar-wrapper text-center bg-green-500 brightness-75">
-          <h1 className="text-neutral-900">{successMessage}</h1>
-          <div className="progress-bar" />
-        </div>
-      )}
-
       {/* Hero section */}
-      <div className="hero-section text-white py-16 px-4 text-center">
-        <h2 className="font-bold text-6xl mb-4">Your Music Playground</h2>
+      <div className="hero-section text-white py-16 px-4 text-center rounded">
+        <h2 className="font-bold text-5xl md:text-6xl mb-4">
+          Your Music Playground
+        </h2>
         <p className="text-lg">Discover and enjoy the latest music tracks.</p>
       </div>
 
       {/* Song category */}
-      <div className="flex m-10 mt-20">
+      <div className="flex m-3 md:m-10 md:mt-20 flex-wrap">
         {category.map((items) => (
           <div
             key={items.name}
-            className="text-white border border-yellow-800 rounded flex m-2 p-2 px-4"
+            className="text-white border hidden md:block border-yellow-800 rounded flex m-2 p-2 px-4"
           >
             <a href={`#${items.name}`}>
               <p>{items.name}</p>
@@ -214,7 +244,7 @@ const HomePage = () => {
         ))}
       </div>
 
-      <h1 className="Trending text-2xl text-white font-semibold pt-10 pl-10">
+      <h1 className="Trending text-2xl text-white font-semibold md:pt-10 md:pl-10">
         Most Popular
       </h1>
 
@@ -236,15 +266,19 @@ const HomePage = () => {
             handleShowDescriptionOfSong={() =>
               handleShowDescriptionOfSong(song._id)
             }
+            showDescriptionOfSongForMobile={() =>
+              showDescriptionOfSongForMobile(song._id)
+            }
             isLiked={isLiked(song._id)}
             handleLikeSong={() => handleLikeSong(song._id)}
+            screenSize={largeScreen}
           />
         ))}
       </div>
 
       {/* Song description */}
       {currentSong && showDescriptionOfSong && (
-        <div className="fixed bottom-5 right-3">
+        <div className="fixed flex justify-center md:bottom-5 md:right-3">
           <SongDescription
             close={() => setShowDescriptionOfSong(false)}
             id={currentSong._id}
@@ -254,11 +288,25 @@ const HomePage = () => {
             album={currentSong.album}
             uploadedBy={currentSong.owner}
             likes={currentSong.likesCount}
-            songUrl={currentSong.songUrl}
             onSuccess={handleSuccessMessage}
             isLiked={isLiked(currentSong._id)}
           />
         </div>
+      )}
+      {currentSong && descriptionOfSongForMobile && (
+        <SongDescriptionForMobile
+          close={() => setDescriptionOfSongForMobile(false)}
+          id={currentSong._id}
+          title={currentSong.title}
+          thumbnail={currentSong.ThumbnailUrl}
+          artist={currentSong.artist}
+          album={currentSong.album}
+          uploadedBy={currentSong.owner}
+          likes={currentSong.likesCount}
+          songUrl={currentSong.songUrl}
+          onSuccess={handleSuccessMessage}
+          isLiked={isLiked(currentSong._id)}
+        />
       )}
 
       {/* Pagination */}

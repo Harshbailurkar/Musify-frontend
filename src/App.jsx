@@ -11,12 +11,16 @@ import ListenLater from "./pages/ListenLater";
 import UserPage from "./pages/UserPage";
 import Radio from "./pages/Radio";
 import ArtistProfile from "./pages/ArtistProfile";
-import PageNotFound from "./pages/PageNotFound";
+import PageNotFound from "./pages/Error/PageNotFound";
 import SharedPlaylist from "./pages/SharedPlaylist";
 import SharedSong from "./pages/SharedSong";
 import GoLive from "./pages/GoLive";
 import LiveConcert from "./pages/LiveConcert";
 import StreamPage from "./pages/StreamPage";
+import DeniedAccess from "./pages/Error/DeniedAccess";
+import ManageStream from "./pages/ManageStream";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   //prevent default context menu from appearing when the user right-clicks anywhere on the webpage
@@ -32,6 +36,19 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="flex-1 flex flex-col bg-gradient-to-br from-black to-[#000000]">
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          transition:Bounce
+        />
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
@@ -49,7 +66,9 @@ export default function App() {
             <Route path="/live" element={<GoLive />} />
             <Route path="/concerts" element={<LiveConcert />} />
             <Route path="/stream/:id" element={<StreamPage />} />
+            <Route path="/stream/accessdenied" element={<DeniedAccess />} />
             <Route path="*" element={<PageNotFound />} />
+            <Route path="/managestream" element={<ManageStream />} />
           </Route>
         </Routes>
       </div>

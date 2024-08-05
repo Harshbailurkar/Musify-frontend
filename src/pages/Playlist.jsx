@@ -26,6 +26,7 @@ import { setMusicData } from "../Redux/Slices/musicData";
 import logo from "../assets/images/logo.png";
 import Logo from "../assets/images/Logo.svg";
 import ShareToolTip from "../components/ShareToolTip";
+import { IoMdPlay } from "react-icons/io";
 
 export default function Playlist() {
   const navigate = useNavigate();
@@ -283,14 +284,17 @@ export default function Playlist() {
       <div
         className={`main-content ${showPlaylistCreationForm ? "blur-sm" : ""}`}
       >
-        <div className="flex items-center justify-between p-24 mr-44">
+        <div className="flex items-center justify-between pt-10 md:p-24 md:mr-44">
           <span>
-            <h2 className="text-5xl text-white font-bold p-1">
-              Your Playlists
+            <h2 className="text-2xl md:text-5xl text-white font-bold p-1">
+              Your Playlist,
+            </h2>
+            <h2 className="text-2xl md:text-5xl text-white font-bold p-1">
+              Your Story
             </h2>
           </span>
           <button
-            className="text-white rainbow-border p-4 flex items-center font-semibold rounded border-2 border-blue-500"
+            className="text-white rainbow-border p-2 md:p-4 flex items-center font-semibold rounded border-4 border-blue-500 text-sm md:text-base"
             onClick={handlePlaylistCreationForm}
           >
             Create Playlist <HiOutlinePlus className="ml-1" />
@@ -299,8 +303,10 @@ export default function Playlist() {
       </div>
       {showPlaylistCreationForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-8 bg-musify-dark text-white border border-gray-800 rounded shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold mb-4">Create New Playlist</h2>
+          <div className="p-8 bg-musify-dark text-white border border-gray-800 rounded shadow-lg w-3/4">
+            <h2 className="text-lg md:text-2xl font-bold mb-4">
+              Create New Playlist
+            </h2>
             <input
               type="text"
               className="w-full p-2 mb-4 border border-gray-700 text-white bg-neutral-950 rounded"
@@ -316,13 +322,13 @@ export default function Playlist() {
             {formError && <p className="text-red-500 mb-4">{formError}</p>}
             <div className="flex justify-end">
               <button
-                className="bg-blue-500 text-white p-2 rounded mr-2"
+                className="bg-blue-500 text-white text-sm md:text-lg p-2 rounded mr-2"
                 onClick={handleCreatePlaylist}
               >
                 Create
               </button>
               <button
-                className="bg-gray-500 text-white p-2 rounded"
+                className="bg-gray-500 text-white text-sm md:text-lg p-2 rounded"
                 onClick={() => setShowPlaylistCreationForm(false)}
               >
                 Cancel
@@ -341,13 +347,13 @@ export default function Playlist() {
           {playlists.map((playlist, index) => (
             <div
               key={playlist._id}
-              className="text-white px-10 p-5 border border-gray-700 rounded mb-2 cursor-pointer"
+              className="text-white px-10 p-2 md:p-5 border border-gray-700 rounded mb-2 cursor-pointer"
             >
               <span
                 className="flex items-center justify-between"
                 onClick={() => handlePlaylistClick(playlist._id, index)}
               >
-                <span className="text-lg flex items-center">
+                <span className="md:text-lg flex items-center">
                   <span className="pr-4">
                     {expandedPlaylist === playlist._id ? (
                       <HiChevronUp />
@@ -364,11 +370,11 @@ export default function Playlist() {
                       e.stopPropagation();
                     }}
                   >
-                    play
+                    <IoMdPlay className="text-sm md:text-lg" />
                   </button>
                 </span>
 
-                <div className="flex space-x-2">
+                <div className="flex space-x-1 md:space-x-2">
                   <span
                     className="hover:bg-musify-dark py-2 rounded cursor-pointer hover:border hover:border-gray-600  text-gray-400 hover:text-white"
                     onClick={(e) => {
@@ -376,10 +382,7 @@ export default function Playlist() {
                       e.stopPropagation();
                     }}
                   >
-                    <HiOutlinePencil
-                      className="mx-2 cursor-pointer"
-                      size={20}
-                    />
+                    <HiOutlinePencil className="mx-2 cursor-pointer text-sm md:text-lg" />
                   </span>
                   <span
                     className="hover:bg-musify-dark py-2 rounded cursor-pointer hover:border hover:border-gray-600 text-gray-400 hover:text-white"
@@ -389,13 +392,13 @@ export default function Playlist() {
                       e.stopPropagation();
                     }}
                   >
-                    <IoIosShareAlt className="mx-2 cursor-pointer" size={20} />
+                    <IoIosShareAlt className="mx-2 cursor-pointer text-sm md:text-lg" />
                   </span>
                   <span
                     className="hover:bg-musify-dark py-2 rounded cursor-pointer hover:border hover:border-gray-600  text-gray-400 hover:text-red-500"
                     onClick={() => handleDeletePlaylist(playlist._id)}
                   >
-                    <HiOutlineTrash className="mx-2 cursor-pointer" size={20} />
+                    <HiOutlineTrash className="mx-2 cursor-pointer text-sm md:text-lg" />
                   </span>
                 </div>
               </span>

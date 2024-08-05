@@ -7,8 +7,10 @@ import SongDescription from "../components/SongDescription.jsx";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
+import TopArtist from "../components/TopArtist.jsx";
 import Logo from "../assets/images/Logo.svg";
 import logo from "../assets/images/logo.png";
+import { toast } from "react-toastify";
 const SearchPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -23,7 +25,7 @@ const SearchPage = () => {
   const [likedSongs, setLikedSongs] = useState([]);
   const [isPageLoading, setPageLoading] = useState(true);
   const dispatch = useDispatch();
-
+  const customId = "custom-id-yes";
   const fetchFollowedChannels = async () => {
     try {
       const response = await getFollowedAccounts();
@@ -44,6 +46,22 @@ const SearchPage = () => {
         console.log("Error from our side! Please refresh.");
       });
   }, [showDescriptionOfSong]);
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: customId,
+      });
+      setSuccessMessage(null); // Clear success message to prevent multiple toasts
+    }
+  }, [successMessage]);
   const handleLikeSong = async (songId) => {
     try {
       await toggleLikeSong(songId);
@@ -132,7 +150,7 @@ const SearchPage = () => {
     setSuccessMessage(message);
   };
   const handlePlaySong = (url, songName, uploadedBy, thumbnail) => {
-    dispatch(setMusicData({ url, songName, uploadedBy, thumbnail })); // corrected parameter name id to title
+    dispatch(setMusicData({ url, songName, uploadedBy, thumbnail }));
   };
 
   if (error === "Login required") {
@@ -141,7 +159,7 @@ const SearchPage = () => {
   }
 
   return (
-    <div className="p-4 text-white relative">
+    <div className="p-4 text-white relative custome-bg">
       {isPageLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img
@@ -152,113 +170,129 @@ const SearchPage = () => {
           />
         </div>
       )}
-      <h1 className="text-5xl font-bold mb-4 mt-10">Search Your Track</h1>
-      <form onSubmit={handleSearch} className="mb-4 mt-14">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by title, artist, album, genre, or language"
-          className="border border-gray-500 p-2 rounded-l text-white bg-musify-dark w-1/2 focus:ring-blue-950"
-        />
-        <button
-          type="submit"
-          className="bg-neutral-950 text-white p-2 border border-gray-400 rounded-r"
-        >
-          Search
-        </button>
-      </form>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      <div>
-        {query && channels.length > 0 && (
-          <div className="channels mb-4 flex gap-10 pt-5">
-            <h2 className="text-2xl font-bold">Artist Profiles</h2>
-            {channels.map((profile, index) => (
-              <Channel
-                userId={profile._id}
-                avatar={profile.avatar}
-                ChannelName={profile.fullName}
-                username={profile.username}
-                followers={profile.followerCount}
-                isFollowed={profile.isfollowed}
-                key={index}
-              />
-            ))}
+      <div className="flex flex-col md:flex-row">
+        {/* Left Section */}
+        <div className="w-full md:w-3/4 pr-4">
+          <h1 className="text-5xl font-bold mb-4 mt-10">Search Your Track</h1>
+          <form onSubmit={handleSearch} className="mb-4 mt-14">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by title, artist, album, genre, or language"
+              className="border border-gray-500 p-2 rounded-l text-white bg-musify-dark w-3/4 focus:ring-blue-950"
+            />
+            <button
+              type="submit"
+              className="bg-neutral-950 text-white p-2 border border-gray-400 rounded-r"
+            >
+              Search
+            </button>
+          </form>
+          {loading && <p>Loading...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          <div>
+            {query && channels.length > 0 && (
+              <div className="flex flex-col">
+                <h2 className="text-2xl font-bold">Artist Profiles</h2>
+                <div className="channels mb-4 gap-10 pt-5 flex flex-wrap">
+                  {channels.map((profile, index) => (
+                    <Channel
+                      userId={profile._id}
+                      avatar={profile.avatar}
+                      ChannelName={profile.fullName}
+                      username={profile.username}
+                      followers={profile.followerCount}
+                      isFollowed={profile.isfollowed}
+                      key={index}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            {!query && followedChannels.length > 0 && (
+              <span className="flex flex-col">
+                <h2 className="text-2xl font-bold mt-10">Followed Artist</h2>
+                <div className="followed-channels mb-4 flex mt-12 gap-10 ">
+                  {followedChannels.map((profile, index) => (
+                    <Channel
+                      userId={profile._id}
+                      avatar={profile.avatar}
+                      ChannelName={profile.fullName}
+                      username={profile.username}
+                      isFollowed={true}
+                      key={index}
+                    />
+                  ))}
+                </div>
+              </span>
+            )}
+            {!query && followedChannels.length == 0 && (
+              <span className="flex flex-col">
+                <h2 className="text-2xl font-bold mt-10">Followed Artist</h2>
+                <div className="followed-channels mb-4 flex mt-12 gap-10 ">
+                  <p className="text-white p-10">No followed artist found</p>
+                </div>
+              </span>
+            )}
+            {results && (
+              <ul>
+                {results.length > 0 &&
+                  results.map((result) => (
+                    <li
+                      key={result._id}
+                      className="border-b border-gray-700 p-2 flex items-center"
+                      onClick={() => {
+                        handlePlaySong(
+                          result.songUrl,
+                          result.title,
+                          result.owner,
+                          result.ThumbnailUrl || logo
+                        );
+                        handleShowDescriptionOfSong(result._id);
+                      }}
+                    >
+                      <img
+                        src={result.ThumbnailUrl || logo}
+                        alt={result.title}
+                        className="w-10 h-10"
+                      />
+                      <p className="p-2 pl-4">{result.title}</p> by{" "}
+                      {result.artist}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </div>
-        )}
-        {!query && followedChannels.length > 0 && (
-          <span>
-            <h2 className="text-2xl font-bold mt-10">Followed Artist</h2>
-            <div className="followed-channels mb-4 flex mt-12 gap-10 ">
-              {followedChannels.map((profile, index) => (
-                <Channel
-                  userId={profile._id}
-                  avatar={profile.avatar}
-                  ChannelName={profile.fullName}
-                  username={profile.username}
-                  isFollowed={true}
-                  key={index}
-                />
-              ))}
+          {/* Song description */}
+          {currentSong && showDescriptionOfSong && (
+            <div className="fixed bottom-5 right-3">
+              <SongDescription
+                close={() => setShowDescriptionOfSong(false)}
+                id={currentSong._id}
+                title={currentSong.title}
+                thumbnail={currentSong.ThumbnailUrl}
+                artist={currentSong.artist}
+                album={currentSong.album}
+                uploadedBy={currentSong.owner}
+                likes={currentSong.likesCount}
+                songUrl={currentSong.songUrl}
+                onSuccess={handleSuccessMessage}
+                isLiked={isLiked(currentSong._id)}
+                handleLikeSong={() => handleLikeSong(currentSong._id)}
+              />
             </div>
-          </span>
-        )}
-        {!query && followedChannels.length == 0 && (
-          <span>
-            <h2 className="text-2xl font-bold mt-10">Followed Artist</h2>
-            <div className="followed-channels mb-4 flex mt-12 gap-10 ">
-              <p className="text-white p-10">No followed artist found</p>
-            </div>
-          </span>
-        )}
-        {results && (
-          <ul>
-            {results.length > 0 &&
-              results.map((result) => (
-                <li
-                  key={result._id}
-                  className="border-b border-gray-700 p-2 flex items-center"
-                  onClick={() => {
-                    handlePlaySong(
-                      result.songUrl,
-                      result.title,
-                      result.owner,
-                      result.ThumbnailUrl || logo
-                    );
-                    handleShowDescriptionOfSong(result._id);
-                  }}
-                >
-                  <img
-                    src={result.ThumbnailUrl || logo}
-                    alt={result.title}
-                    className="w-10 h-10"
-                  />
-                  <p className="p-2 pl-4">{result.title}</p> by {result.artist}
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
-      {/* Song description */}
-      {currentSong && showDescriptionOfSong && (
-        <div className="fixed bottom-5 right-3">
-          <SongDescription
-            close={() => setShowDescriptionOfSong(false)}
-            id={currentSong._id}
-            title={currentSong.title}
-            thumbnail={currentSong.ThumbnailUrl}
-            artist={currentSong.artist}
-            album={currentSong.album}
-            uploadedBy={currentSong.owner}
-            likes={currentSong.likesCount}
-            songUrl={currentSong.songUrl}
-            onSuccess={handleSuccessMessage}
-            isLiked={isLiked(currentSong._id)}
-            handleLikeSong={() => handleLikeSong(currentSong._id)}
-          />
+          )}
         </div>
-      )}
+        {
+          /* Right Section */
+          !showDescriptionOfSong && (
+            <div className="w-full md:w-1/4">
+              <TopArtist />
+            </div>
+          )
+        }
+      </div>
     </div>
   );
 };

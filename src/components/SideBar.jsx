@@ -64,7 +64,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
   };
 
   return (
-    <header className="text-white fixed top-0 left-0 h-full py-4 px-4 border-l-4 border-gray-500 shadow-lg shadow-gray-700 transition-width duration-300 z-50">
+    <header className="text-white fixed top-0 left-0 h-full py-4 px-4 border-l-4 border-gray-500 shadow-lg shadow-gray-700 transition-width duration-300 z-50 hidden md:block">
       <div className="flex justify-between items-center sm:justify-start">
         <HiViewList
           size={25}

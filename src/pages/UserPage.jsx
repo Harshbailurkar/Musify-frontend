@@ -1,5 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { getCurrentUser, getChannel, logoutUser } from "../API/userAPI";
+import {
+  getCurrentUser,
+  getChannel,
+  logoutUser,
+  updateCoverImage,
+} from "../API/userAPI";
 import { getSongByOwner, deleteSong } from "../API/songAPI";
 import NotFound from "../assets/images/NotFound.png";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
@@ -10,6 +15,8 @@ import UploadSong from "../components/UploadSong";
 import EditSongInfo from "../components/EditSongInfo";
 import Logo from "../assets/images/Logo.svg";
 import logo from "../assets/images/logo.png";
+import { getUserStream } from "../API/streamAPI";
+import { toast } from "react-toastify";
 
 export default function UserPage() {
   const [getUser, setGetUser] = useState("");
@@ -25,14 +32,20 @@ export default function UserPage() {
   const [showEditSongForm, setShowEditSongForm] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [yourStreamStatus, setYourStreamStatus] = useState(null);
   const navigate = useNavigate();
   const logoutRef = useRef(null);
   const fileInputRef = useRef(null);
+  const customId = "custom-id-yes";
 
   useEffect(() => {
     getCurrentUser()
       .then((data) => {
         setGetUser(data.data);
+        getUserStream(data.data._id).then((data) => {
+          setYourStreamStatus(data.data?.isLive);
+        });
+
         setLoading(false);
       })
       .catch((error) => {
@@ -40,7 +53,6 @@ export default function UserPage() {
         setError(error.message || "Login failed");
       });
   }, [successMessage]);
-
   setTimeout(() => {
     setSuccessMessage(null);
     setError(null);
@@ -56,7 +68,6 @@ export default function UserPage() {
         });
     }
   }, [getUser, successMessage]);
-
   useEffect(() => {
     if (getUser && getUser.username) {
       getSongByOwner(getUser.username)
@@ -68,7 +79,6 @@ export default function UserPage() {
         });
     }
   }, [getUser, showEditSongForm]);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (logoutRef.current && !logoutRef.current.contains(event.target)) {
@@ -94,37 +104,29 @@ export default function UserPage() {
       });
     setShowLogoutTooltip(false);
   };
-
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
-
   const handleIconClick = () => {
     setShowLogoutTooltip(!showLogoutTooltip);
   };
-
   const handleEditClick = (id) => {
     setSelectedSongId(id);
     setShowEditSongForm(true);
     setShowEditTooltip(null);
   };
-
   const handleEditIconClick = (songId) => {
     setShowEditTooltip(showEditTooltip === songId ? null : songId);
   };
-
   const filteredSongs = getSongList.filter((song) =>
     song.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
   const handleEditModal = () => {
     setShowEditProfileModal(true);
   };
-
   const closeEditProfileModal = () => {
     setShowEditProfileModal(false);
   };
-
   const handleSuccessMessage = (message) => {
     setSuccessMessage(message);
     closeEditProfileModal();
@@ -148,18 +150,43 @@ export default function UserPage() {
       setError(error.message || "Error while deleting song");
     }
   };
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
+  const handleAddCoverPhoto = () => {
+    fileInputRef.current?.click();
   };
-
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
+    const file = event.target?.files[0];
+
     if (file) {
-      // Handle the selected file here
-      console.log("Selected file:", file);
+      updateCoverImage(file)
+        .then((response) => {
+          if (response.success) {
+            setSuccessMessage("CoverImage updated successfully");
+          } else {
+            setError(response.message);
+          }
+        })
+        .catch((error) =>
+          setError("Error updating cover Image: " + error.message)
+        )
+        .finally(() => setLoading(false));
     }
   };
-
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: customId,
+      });
+      setSuccessMessage(null); // Clear success message to prevent multiple toasts
+    }
+  }, [successMessage]);
   if (error === "Login required") {
     navigate("/login");
   }
@@ -179,25 +206,35 @@ export default function UserPage() {
       {error && error !== "No Songs are availabe" && (
         <h1 className="text-red-500">{error}</h1>
       )}
-      {successMessage && (
-        <div className="progress-bar-wrapper text-center  bg-green-500 brightness-75  ">
-          <h1 className="text-neutral-900">{successMessage}</h1>
-          <div className="progress-bar" />
-        </div>
-      )}
-      <div className="w-full h-52 ">
-        <div className="bg-gray-800 w-auto h-full mx-10 rounded-lg">
+      <div className="w-full mt-10 md:mt-0 h-32 md:h-52 ">
+        <div className="bg-gray-800 w-auto h-full md:mx-10 rounded-lg ">
           {getUser.coverPhoto ? (
-            <img
-              src={getUser.coverPhoto}
-              alt=""
-              className="w-full h-full object-cover rounded-lg"
-            />
+            <div className="flex w-full h-full justify-center items-center">
+              <img
+                src={getUser.coverPhoto}
+                alt=""
+                className="w-full h-full object-cover rounded-lg"
+              />
+              <button
+                className="absolute md:text-xl font-bold p-1 md:p-2 border rounded"
+                onClick={handleAddCoverPhoto}
+              >
+                Edit Cover
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+                accept="image/*"
+                name="coverPhoto"
+              />
+            </div>
           ) : (
             <div className="flex w-full h-full justify-center items-center">
               <button
                 className="text-2xl text-center p-2 rounded border-gray-600 border hover:border-gray-500"
-                onClick={handleButtonClick}
+                onClick={handleAddCoverPhoto}
               >
                 Add a cover Photo
               </button>
@@ -214,8 +251,8 @@ export default function UserPage() {
         </div>
       </div>
       {/* User Profile*/}
-      <div className="flex pt-5 pl-32">
-        <div className="w-32 h-32">
+      <div className="flex pt-5 md:pl-32 justify-center md:justify-start">
+        <div className=" w-16 md:w-32 h-auto md:h-32">
           <img
             src={
               getUser.avatar
@@ -223,13 +260,15 @@ export default function UserPage() {
                 : "https://avatars.githubusercontent.com/u/149575885?v=4"
             }
             alt=""
-            className="rounded-full object-cover w-32 h-32"
+            className="rounded-full object-cover mt-5 md:mt-0 w-16 md:w-32 h-auto md:h-32"
             draggable="false"
           />
         </div>
 
-        <div className="ml-10">
-          <h1 className="text-5xl p-2 font-bold">{getUser.fullName}</h1>
+        <div className=" ml-5 md:ml-10">
+          <h1 className=" text-xl md:text-5xl p-2 font-bold">
+            {getUser.fullName}
+          </h1>
           <span className="flex items-center justify-between">
             <h4 className="pl-2">@{getUser.username}</h4>
             <div className="relative" ref={logoutRef}>
@@ -240,10 +279,7 @@ export default function UserPage() {
               />
               {showLogoutTooltip && (
                 <div className="absolute bg-musify-dark text-white hover:bg-neutral-950 border p-2 rounded shadow-lg z-10 right-0 top-full mt-2">
-                  <button
-                    className="w-full text-left p-1"
-                    onClick={handleLogout}
-                  >
+                  <button className="w-full text-left " onClick={handleLogout}>
                     Logout
                   </button>
                 </div>
@@ -251,7 +287,7 @@ export default function UserPage() {
             </div>
           </span>
           {/* Followers and following count */}
-          <span className="flex pt-1 text-xl">
+          <span className="flex pt-1 text-sm md:text-xl">
             <h4 className="pl-2 pt-1 px-6">
               Followers:{" "}
               {getChannelDetails
@@ -268,33 +304,46 @@ export default function UserPage() {
         </div>
       </div>
       {/* Edit profile and upload song buttons */}
-      <div className="pt-10 pl-32 flex">
+      <div className="pt-5 md:pt-10 md:pl-32 flex text-sm">
         <button
-          className="btn bg-musify-dark hover:bg-neutral-950 p-3 mx-4 rounded border border-gray-500 shadow-sm shadow-gray-700"
+          className="btn bg-musify-dark hover:bg-neutral-950 md:p-3 px-1 mx-4 rounded border border-gray-500 shadow-sm shadow-gray-700"
           onClick={handleEditModal}
         >
           Edit Profile
         </button>
         <button
-          className="btn bg-musify-dark hover:bg-neutral-950 p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
+          className="btn bg-musify-dark hover:bg-neutral-950 p-1 md:p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
           onClick={handleUploadSong}
         >
           Upload Song
         </button>
-        {getChannelDetails && getChannelDetails.followerCount > 3 && (
-          <button
-            className="btn mx-4 bg-musify-dark hover:bg-red-950 p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
-            onClick={() => {
-              navigate("/live", { state: getUser });
-            }}
-          >
-            start concert
-          </button>
-        )}
+        {getChannelDetails &&
+          !yourStreamStatus &&
+          getChannelDetails.followerCount > 3 && (
+            <button
+              className="btn mx-4 bg-musify-dark hover:bg-red-950 p-1 md:p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
+              onClick={() => {
+                navigate("/live", { state: getUser });
+              }}
+            >
+              start concert
+            </button>
+          )}
+        {getChannelDetails &&
+          yourStreamStatus &&
+          getChannelDetails.followerCount > 3 && (
+            <button
+              className="btn mx-4 bg-musify-dark hover:bg-red-950 p-1 md:p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
+              onClick={() => {
+                navigate("/manageStream", { state: getUser });
+              }}
+            >
+              Manage Concert
+            </button>
+          )}
       </div>
 
       {/* Modals */}
-
       {showUploadSongModal && (
         <UploadSong
           onClose={() => setShowUploadSongModal(false)}
@@ -311,7 +360,7 @@ export default function UserPage() {
       )}
 
       {/* songs uploaded by the user */}
-      <div className="pl-20 pt-16">
+      <div className="pl-5 md:pl-20 pt-16">
         <h3 className="text-2xl font-semibold">Your songs</h3>
         {(error && error === "No Songs are available") ||
         getSongList.length === 0 ? (
@@ -319,7 +368,7 @@ export default function UserPage() {
             <img
               src={NotFound}
               alt=""
-              className="w-36 h-36"
+              className="w-20 mt-20 md:mt-10 md:w-36 h-20 md:h-36"
               draggable="false"
             />
             <h1 className="text-xl pt-4">
@@ -335,7 +384,7 @@ export default function UserPage() {
             <div className="flex flex-wrap gap-4 pt-10">
               {filteredSongs.map((song) => (
                 <div
-                  className="bg-musify-dark w-52 p-4 flex flex-col flex-wrap rounded shadow-md   relative"
+                  className="bg-musify-dark w-32 md:w-52 p-4 flex flex-col flex-wrap rounded shadow-md   relative"
                   key={song._id}
                 >
                   {/* Edit and delete icons */}
@@ -346,7 +395,7 @@ export default function UserPage() {
                       size={22}
                     />
                     {showEditTooltip === song._id && (
-                      <div className="absolute top-0 right-0 mt-2 w-32 bg-musify-dark text-white p-2 rounded shadow-lg z-10 border border-gray-600">
+                      <div className="absolute top-0 right-0 mt-2 w-16 md:w-32 bg-musify-dark text-white p-2 rounded shadow-lg z-10 border border-gray-600">
                         <button
                           className="w-full text-left p-1 hover:bg-neutral-950"
                           onClick={() => handleEditClick(song._id)}
@@ -382,15 +431,15 @@ export default function UserPage() {
                     <img
                       src={song.ThumbnailUrl || logo}
                       alt=""
-                      className="w-full h-44 rounded-md "
+                      className="w-full h-22 md:h-44 rounded-md "
                     />
-                    <h3 className="text-lg font-medium pt-2 text-left">
+                    <h3 className="text-base md:text-lg font-medium md:pt-2 text-left">
                       {song.title}
                     </h3>
-                    <h3 className="text-sm font-medium pt-2 text-left">
+                    <h3 className="text-sm font-medium md:pt-2 text-left">
                       from {song.album}
                     </h3>
-                    <h3 className="text-sm font-medium pt-2 text-left">
+                    <h3 className="text-sm font-medium md:pt-2 text-left">
                       Likes :{" " + song.likesCount}
                     </h3>
                   </div>
