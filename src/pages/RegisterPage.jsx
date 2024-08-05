@@ -1,20 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { registerUser } from "../API/userAPI.js";
 import { useNavigate, NavLink } from "react-router-dom";
+import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import Logo from "../assets/images/Logo.svg";
 
 export default function RegisterPage() {
-  const [registerData, setRegisterData] = React.useState({
+  const [registerData, setRegisterData] = useState({
     username: "",
     email: "",
     fullName: "",
     password: "",
   });
-  const [error, setError] = React.useState(null);
-  const [status, setStatus] = React.useState("idle");
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState("idle");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
   localStorage.setItem("loggedIn", false);
+
   function validateInput() {
     const { username, password } = registerData;
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
@@ -66,6 +69,10 @@ export default function RegisterPage() {
     setError(null);
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
   return (
     <div className="flex flex-col items-center self-center text-white">
       <div className="items-center text-center mt-5">
@@ -74,12 +81,12 @@ export default function RegisterPage() {
         </div>
         <h1 className="text-4xl font-bold pb-9">Register</h1>
         <p>Fill all the details</p>
-        {error && <p className="text-red-500 w-52">{error}</p>}
+        {error && <p className="text-red-500 w-80">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <input
               type="text"
-              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
+              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent w-80"
               placeholder="Username"
               onChange={handleChange}
               name="username"
@@ -87,7 +94,7 @@ export default function RegisterPage() {
             />
             <input
               type="email"
-              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
+              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent w-80"
               placeholder="Email"
               onChange={handleChange}
               name="email"
@@ -95,20 +102,33 @@ export default function RegisterPage() {
             />
             <input
               type="text"
-              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
+              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent w-80"
               placeholder="Full Name"
               onChange={handleChange}
               name="fullName"
               value={registerData.fullName}
             />
-            <input
-              type="password"
-              className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent"
-              placeholder="Password"
-              onChange={handleChange}
-              name="password"
-              value={registerData.password}
-            />
+            <div className="relative">
+              <input
+                type={passwordVisible ? "text" : "password"}
+                className="border-2 p-2 m-2 border-slate-800 rounded-lg bg-transparent w-80 pr-10"
+                placeholder="Password"
+                onChange={handleChange}
+                name="password"
+                value={registerData.password}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 mr-5 flex items-center px-2 text-gray-400"
+              >
+                {passwordVisible ? (
+                  <HiOutlineEyeOff size={20} />
+                ) : (
+                  <HiOutlineEye size={20} />
+                )}
+              </button>
+            </div>
             <button
               className="bg-blue-400 p-2 m-2 rounded text-black"
               disabled={status === "submitting"}
@@ -116,7 +136,7 @@ export default function RegisterPage() {
               {status === "submitting" ? "Creating ..." : "Create Account"}
             </button>
             <h1 className="mb-1">or</h1>
-            <button type="button" class="login-with-google-btn">
+            <button type="button" className="login-with-google-btn">
               Continue with Google
             </button>
           </div>

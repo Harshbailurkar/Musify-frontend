@@ -40,9 +40,13 @@ const TopBar = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
+  const handleNavLinkClick = () => {
+    setDropdownVisible(false);
+  };
+
   return (
     <header className="bg-musify-dark text-white flex items-center justify-between px-4 py-2 shadow-lg fixed top-0 left-0 w-full z-50 md:hidden">
-      <div className="flex items-center ">
+      <div className="flex items-center">
         <HiOutlineMenu
           size={25}
           className="cursor-pointer sm:hidden"
@@ -99,28 +103,53 @@ const TopBar = () => {
       </div>
       {dropdownVisible && (
         <div className="absolute top-12 left-0 w-full bg-musify-dark text-white shadow-lg sm:hidden">
-          <NavLink to="/" className="block px-4 py-2 hover:bg-gray-700">
+          <NavLink
+            to="/"
+            className="block px-4 py-2 hover:bg-gray-700"
+            onClick={handleNavLinkClick}
+          >
             Home
           </NavLink>
-          <NavLink to="/search" className="block px-4 py-2 hover:bg-gray-700">
+          <NavLink
+            to="/search"
+            className="block px-4 py-2 hover:bg-gray-700"
+            onClick={handleNavLinkClick}
+          >
             Search
           </NavLink>
-          <NavLink to="/favorite" className="block px-4 py-2 hover:bg-gray-700">
+          <NavLink
+            to="/favorite"
+            className="block px-4 py-2 hover:bg-gray-700"
+            onClick={handleNavLinkClick}
+          >
             Favorite
           </NavLink>
-          <NavLink to="/playlist" className="block px-4 py-2 hover:bg-gray-700">
+          <NavLink
+            to="/playlist"
+            className="block px-4 py-2 hover:bg-gray-700"
+            onClick={handleNavLinkClick}
+          >
             Playlists
           </NavLink>
           <NavLink
             to="/listen-later"
             className="block px-4 py-2 hover:bg-gray-700"
+            onClick={handleNavLinkClick}
           >
             Listen Later
           </NavLink>
-          <NavLink to="/concerts" className="block px-4 py-2 hover:bg-gray-700">
+          <NavLink
+            to="/concerts"
+            className="block px-4 py-2 hover:bg-gray-700"
+            onClick={handleNavLinkClick}
+          >
             Live Concerts
           </NavLink>
-          <NavLink to="/radio" className="block px-4 py-2 hover:bg-gray-700">
+          <NavLink
+            to="/radio"
+            className="block px-4 py-2 hover:bg-gray-700"
+            onClick={handleNavLinkClick}
+          >
             Radio
           </NavLink>
         </div>
