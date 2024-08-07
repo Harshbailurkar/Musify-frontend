@@ -159,7 +159,7 @@ const SearchPage = () => {
   }
 
   return (
-    <div className="p-4 text-white relative custome-bg">
+    <div className="p-4 pt-10 text-white relative custome-bg">
       {isPageLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img
@@ -173,7 +173,9 @@ const SearchPage = () => {
       <div className="flex flex-col md:flex-row">
         {/* Left Section */}
         <div className="w-full md:w-3/4 pr-4">
-          <h1 className="text-5xl font-bold mb-4 mt-10">Search Your Track</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 mt-10">
+            Search Your Track
+          </h1>
           <form onSubmit={handleSearch} className="mb-4 mt-14">
             <input
               type="search"
@@ -213,7 +215,7 @@ const SearchPage = () => {
             {!query && followedChannels.length > 0 && (
               <span className="flex flex-col">
                 <h2 className="text-2xl font-bold mt-10">Followed Artist</h2>
-                <div className="followed-channels mb-4 flex mt-12 gap-10 ">
+                <div className="followed-channels mb-4 flex flex-wrap mt-12 gap-10 ">
                   {followedChannels.map((profile, index) => (
                     <Channel
                       userId={profile._id}

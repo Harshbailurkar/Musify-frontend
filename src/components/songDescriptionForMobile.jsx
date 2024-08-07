@@ -149,7 +149,7 @@ const SongDescriptionForMobile = ({
           </button>
         </div>
         {/* Image */}
-        <div className="w-64 h-64 flex-col items-center justify-center mt-4">
+        <div className="w-64 h-64 flex-col items-center justify-center mt-2">
           <img
             className="w-full h-full object-cover rounded-lg"
             src={thumbnail ? thumbnail : Logo}
@@ -165,7 +165,7 @@ const SongDescriptionForMobile = ({
             }`}
           >
             <div className={`${isTitleLong ? "title-sliding-text" : "flex"} `}>
-              <h1 className="text-xl font-bold mt-4 pb-3">{title}</h1>
+              <h1 className="text-xl font-bold mt-2 pb-3">{title}</h1>
             </div>
           </div>
 

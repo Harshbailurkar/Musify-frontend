@@ -209,7 +209,7 @@ const HomePage = () => {
   }, [successMessage]);
 
   return (
-    <div className="flex flex-col flex-1 relative">
+    <div className="flex flex-col flex-1 relative p-4 pt-10 md:pt-5">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img

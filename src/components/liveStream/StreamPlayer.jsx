@@ -14,25 +14,52 @@ export default function StreamPlayer({ stream, sid }) {
   const playerRef = useRef(null);
 
   const handleFullscreen = () => {
-    if (playerRef.current) {
-      if (playerRef.current.requestFullscreen) {
-        playerRef.current.requestFullscreen();
-      } else if (playerRef.current.mozRequestFullScreen) {
+    if (document.fullscreenElement) {
+      // Exit fullscreen mode
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
         // Firefox
-        playerRef.current.mozRequestFullScreen();
-      } else if (playerRef.current.webkitRequestFullscreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
         // Chrome, Safari and Opera
-        playerRef.current.webkitRequestFullscreen();
-      } else if (playerRef.current.msRequestFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
         // IE/Edge
-        playerRef.current.msRequestFullscreen();
+        document.msExitFullscreen();
+      }
+
+      // Remove fullscreen class
+      document.body.classList.remove("fullscreen-landscape");
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    } else {
+      // Enter fullscreen mode
+      if (playerRef.current) {
+        if (playerRef.current.requestFullscreen) {
+          playerRef.current.requestFullscreen();
+        } else if (playerRef.current.mozRequestFullScreen) {
+          // Firefox
+          playerRef.current.mozRequestFullScreen();
+        } else if (playerRef.current.webkitRequestFullscreen) {
+          // Chrome, Safari and Opera
+          playerRef.current.webkitRequestFullscreen();
+        } else if (playerRef.current.msRequestFullscreen) {
+          // IE/Edge
+          playerRef.current.msRequestFullscreen();
+        }
+
+        // Apply fullscreen class
+        document.body.classList.add("fullscreen-landscape");
+        document.body.style.overflow = "hidden";
+        document.body.style.position = "fixed";
       }
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full p-4 pt-10">
         <ClipLoader size={50} color={"#123abc"} loading={loading} />
       </div>
     ); // Display loading state with spinner

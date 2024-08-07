@@ -20,7 +20,7 @@ export default function Radio() {
   }
 
   return (
-    <div className="content text-white">
+    <div className="content text-white p-4 pt-10">
       <div className="PlaylistsHero">
         <div className="pt-2 pb-44 ml-0 md:ml-16">
           <div className="ml:0 md:ml-4 w-full md:w-3/4 py-5 md:pt-10">

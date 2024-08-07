@@ -127,7 +127,7 @@ export default function ArtistProfile() {
   );
 
   return (
-    <div className="text-white relative">
+    <div className="text-white relative p-4 mt-10 md:mt-0">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img

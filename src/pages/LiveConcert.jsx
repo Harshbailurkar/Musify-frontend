@@ -82,7 +82,7 @@ export default function LiveConcert() {
     <div>
       {/* Hero Section */}
       <div
-        className="w-full min-h-screen m-0 p-0 bg-no-repeat bg-cover"
+        className="w-full pt-20 p-4 md:pt-0 min-h-screen m-0  bg-no-repeat bg-cover"
         style={{ backgroundImage: `url(${ConcertHero})` }}
       >
         <div className=" md:ml-20 md:pt-32">

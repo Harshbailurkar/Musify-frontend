@@ -34,7 +34,7 @@ const Layout = () => {
         <TopBar toggleSidebar={toggleSidebar} />
         <SideBar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
         <main
-          className={`flex-1 p-4 overflow-y-auto ${
+          className={`flex-1  overflow-y-auto ${
             isCollapsed ? "ml-0 md:ml-28" : "ml-0 md:ml-64"
           }`}
         >

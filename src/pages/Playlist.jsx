@@ -269,7 +269,7 @@ export default function Playlist() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative p-4 pt-10 md:pt-0">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
           <img
@@ -518,7 +518,7 @@ export default function Playlist() {
 
       {showPlayListUpdateForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-8 bg-musify-dark text-white border border-gray-800 rounded shadow-lg w-1/3">
+          <div className="p-8 bg-musify-dark text-white border border-gray-800 rounded shadow-lg md:w-1/3">
             <h2 className="text-2xl font-bold mb-4">Update Playlist</h2>
             <input
               type="text"
@@ -551,11 +551,11 @@ export default function Playlist() {
         </div>
       )}
       {showShareToolTip && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 ml-24">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 md:ml-24">
           <ShareToolTip
             link={link}
             Close={() => setShowShareToolTip(false)}
-            className="fixed top-1/2 left-1/2 mb-4 mr-4"
+            className="fixed md:top-1/2 md:left-1/2 mb-4 mr-4"
           />
         </div>
       )}

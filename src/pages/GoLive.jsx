@@ -149,7 +149,7 @@ export default function GoLive() {
   }
 
   return (
-    <div className="bg-black relative p-10 border border-gray-700 rounded min-h-full text-white">
+    <div className="bg-black relative p-10 pt-16 md:pt-10 border border-gray-700 rounded min-h-full text-white">
       <button onClick={() => navigate("/user")}>
         <FaArrowLeftLong className="text-xl text-white" />
       </button>
@@ -160,12 +160,12 @@ export default function GoLive() {
 
         <form className="mt-10">
           <p className="text-gray-200 text-lg">
-            Step 1: add your stream details
+            Step 1: add your Concert details
           </p>
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0 lg:space-x-4">
             <div className="flex flex-col lg:w-1/2">
               <label htmlFor="stream-name" className="p-1 text-gray-300">
-                Stream Name
+                Concert Name
               </label>
               <input
                 type="text"
@@ -336,6 +336,12 @@ export default function GoLive() {
           </div>
         )}
       </div>
+      <button
+        className="text-white rounded p-2 border border-gray-700 mt-5 bg-blue-950 hover:bg-blue-900"
+        onClick={() => navigate("/manageStream", { state: userInfo })}
+      >
+        Manage Your Stream
+      </button>
     </div>
   );
 }

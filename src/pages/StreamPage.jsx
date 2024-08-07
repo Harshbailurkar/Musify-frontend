@@ -29,7 +29,7 @@ export default function StreamPage() {
   }, [id]); // Ensure the effect runs again if id changes
 
   return (
-    <div>
+    <div className="p-2 pt-20 md:pt-5">
       {stream ? <StreamPlayer stream={stream} /> : <p>Loading stream...</p>}
     </div>
   );

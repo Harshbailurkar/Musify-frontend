@@ -251,3 +251,17 @@ h6 {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+/* Apply this CSS to simulate rotation for fullscreen mode */
+@media screen and (orientation: portrait) {
+  body.fullscreen-landscape {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
