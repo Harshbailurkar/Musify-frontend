@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Channel from "../components/Channel";
 import { getFollowedAccounts } from "../API/userAPI.js";
 import { searchQuery, getSongById } from "../API/songAPI.js";
-import SongDescription from "../components/SongDescription.jsx";
+import SongDescription from "../components/songs/SongDescription.jsx";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";

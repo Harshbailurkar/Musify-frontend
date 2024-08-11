@@ -25,7 +25,7 @@ import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import logo from "../assets/images/logo.png";
 import Logo from "../assets/images/Logo.svg";
-import ShareToolTip from "../components/ShareToolTip";
+import ShareToolTip from "../components/songs/ShareToolTip";
 import { IoMdPlay } from "react-icons/io";
 
 export default function Playlist() {

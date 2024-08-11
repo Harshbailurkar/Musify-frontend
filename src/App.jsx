@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
-import Layout from "./components/Layout";
+import Layout from "./components/Layout/Layout";
 import Search from "./pages/Search";
 import Playlist from "./pages/Playlist";
 import Favorite from "./pages/Favorite";

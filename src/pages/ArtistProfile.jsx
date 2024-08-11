@@ -9,7 +9,7 @@ import SearchBar from "../components/Searchbar";
 import Logo from "../assets/images/Logo.svg";
 import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
-import SongDescription from "../components/SongDescription.jsx";
+import SongDescription from "../components/songs/SongDescription.jsx";
 import logo from "../assets/images/logo.png";
 import { toast } from "react-toastify";
 

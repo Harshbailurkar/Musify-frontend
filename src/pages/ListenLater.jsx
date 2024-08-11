@@ -13,7 +13,7 @@ import { setMusicData } from "../Redux/Slices/musicData";
 import Logo from "../assets/images/Logo.svg";
 import logo from "../assets/images/logo.png";
 import { toast } from "react-toastify";
-import SongDescription from "../components/SongDescription";
+import SongDescription from "../components/songs/SongDescription";
 
 export default function ListenLater() {
   const navigate = useNavigate();

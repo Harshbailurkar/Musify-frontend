@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { setMusicData } from "../Redux/Slices/musicData";
 import Logo from "../assets/images/Logo.svg";
 import logo from "../assets/images/logo.png";
-import SongDescription from "../components/SongDescription";
+import SongDescription from "../components/songs/SongDescription";
 
 export default function Favorite() {
   const [songs, setSongs] = useState([]);

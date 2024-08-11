@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { getAllSongs, getSongById } from "../API/songAPI";
-import Songs from "../components/Songs";
+import Songs from "../components/songs/Songs";
 import { useNavigate } from "react-router-dom";
 import { category } from "../assets/constant";
-import SongDescription from "../components/SongDescription";
-import SongDescriptionForMobile from "../components/songDescriptionForMobile";
+import SongDescription from "../components/songs/SongDescription";
+import SongDescriptionForMobile from "../components/songs/songDescriptionForMobile";
 import { getAllLikedSong } from "../API/favoriteAPI";
 import Logo from "../assets/images/Logo.svg";
 import { HiArrowNarrowLeft, HiArrowNarrowRight } from "react-icons/hi";

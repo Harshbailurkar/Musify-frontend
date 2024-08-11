@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-
 import { createViewerToken } from "../API/userAPI";
 export const useViewerToken = (hostIdentity) => {
   const [token, setToken] = useState("");
