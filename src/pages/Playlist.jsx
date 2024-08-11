@@ -303,7 +303,7 @@ export default function Playlist() {
       </div>
       {showPlaylistCreationForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-8 bg-musify-dark text-white border border-gray-800 rounded shadow-lg w-3/4">
+          <div className="p-8 bg-musify-dark text-white border border-gray-800 rounded shadow-lg w-3/4 md:w-1/2">
             <h2 className="text-lg md:text-2xl font-bold mb-4">
               Create New Playlist
             </h2>
