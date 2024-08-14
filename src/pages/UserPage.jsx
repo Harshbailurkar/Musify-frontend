@@ -317,30 +317,28 @@ export default function UserPage() {
         >
           Upload Song
         </button>
-        {getChannelDetails &&
-          !yourStreamStatus &&
-          getChannelDetails.followerCount > 3 && (
-            <button
-              className="btn mx-4 bg-musify-dark hover:bg-red-950 p-1 md:p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
-              onClick={() => {
-                navigate("/live", { state: getUser });
-              }}
-            >
-              start concert
-            </button>
-          )}
-        {getChannelDetails &&
-          yourStreamStatus &&
-          getChannelDetails.followerCount > 3 && (
-            <button
-              className="btn mx-4 bg-musify-dark hover:bg-red-950 p-1 md:p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
-              onClick={() => {
-                navigate("/manageStream", { state: getUser });
-              }}
-            >
-              Manage Concert
-            </button>
-          )}
+        {getChannelDetails && !yourStreamStatus && (
+          // getChannelDetails.followerCount > 3 &&
+          <button
+            className="btn mx-4 bg-musify-dark hover:bg-red-950 p-1 md:p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
+            onClick={() => {
+              navigate("/live", { state: getUser });
+            }}
+          >
+            start concert
+          </button>
+        )}
+        {getChannelDetails && yourStreamStatus && (
+          // getChannelDetails.followerCount > 3 &&
+          <button
+            className="btn mx-4 bg-musify-dark hover:bg-red-950 p-1 md:p-3 rounded border border-gray-500 shadow-sm shadow-gray-700"
+            onClick={() => {
+              navigate("/manageStream", { state: getUser });
+            }}
+          >
+            Manage Concert
+          </button>
+        )}
       </div>
 
       {/* Modals */}
