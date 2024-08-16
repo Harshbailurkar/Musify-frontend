@@ -182,7 +182,7 @@ const SearchPage = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by title, artist, album, genre, or language"
-              className="border border-gray-500 p-2 rounded-l text-white bg-musify-dark w-3/4 focus:ring-blue-950"
+              className="border border-gray-500 p-2 rounded-l text-white bg-musify-dark w-3/4 focus:ring-blue-950 focus:outline-none"
             />
             <button
               type="submit"

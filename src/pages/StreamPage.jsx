@@ -26,7 +26,7 @@ export default function StreamPage() {
       }
     };
     fetchStream();
-  }, [id]); // Ensure the effect runs again if id changes
+  }, [id]);
 
   return (
     <div className="p-2 pt-20 md:pt-5">

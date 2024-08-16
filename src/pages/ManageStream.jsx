@@ -88,37 +88,25 @@ export default function ManageStream() {
     }
     setEntryFee(value);
   };
-  console.log(stream);
 
   return (
     <div className="bg-gray-950">
-      <div className="flex flex-col lg:flex-row bg-gray-950">
-        <div className="flex flex-col w-full lg:w-1/2 h-full p-4">
-          <h1 className="text-white mb-4 text-3xl font-bold">Your Stream</h1>
+      <div className="flex flex-col bg-gray-950">
+        <div className="flex flex-col w-full h-full p-4">
+          <h1 className="text-white mb-4 text-3xl font-bold px-10 pt-5">
+            Manage Your Concert
+          </h1>
           <div className="flex-1 border border-gray-700 rounded">
             {stream ? (
-              <StreamPlayer stream={stream} sid={id} />
+              <StreamPlayer stream={stream} isManaging={true} sid={id} />
             ) : (
               <p className="text-white">Loading stream...</p>
             )}
           </div>
         </div>
-        <div className="flex flex-col w-full lg:w-1/2 p-4 pt-14">
-          <p className="text-white p-2 mb-4">
-            Note: To end Your Stream, You have to stop streaming from Your
-            Streaming software after that click on the stop stream button below
-            to completely end your stream.
-          </p>
-          <button
-            className="text-white p-2 m-2 bg-red-900 h-14 rounded"
-            onClick={() => handleStopStream(id)}
-          >
-            Stop Stream
-          </button>
-        </div>
       </div>
       {stream && (
-        <form className="mt-10 p-2 md:px-10">
+        <form className="mt-2 p-2 md:px-10 ">
           <p className="text-white text-2xl py-5">Update Your Concert Info</p>
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0 lg:space-x-4">
             <div className="flex flex-col lg:w-1/2">
@@ -242,6 +230,19 @@ export default function ManageStream() {
           </button>
         </form>
       )}
+      <div className="flex flex-col w-full p-4">
+        <p className="text-white p-2 mb-4">
+          Note: To end Your Stream, You have to stop streaming from Your
+          Streaming software after that click on the stop stream button below to
+          completely end your stream.
+        </p>
+        <button
+          className="text-white p-2 m-2 bg-red-900 h-14 rounded"
+          onClick={() => handleStopStream(id)}
+        >
+          End Concert
+        </button>
+      </div>
     </div>
   );
 }
