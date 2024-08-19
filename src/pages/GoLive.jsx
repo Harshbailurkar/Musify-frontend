@@ -222,12 +222,24 @@ export default function GoLive() {
                     before you start new stream let clear the cache data to
                     except fresh payment
                   </p>
-                  <button
-                    className="p-1 rounded m-2 mx-0 bg-red-950 "
-                    onClick={(e) => handleStopStream(e, userInfo._id)}
-                  >
-                    {clearBtnText}
-                  </button>
+                  <span className="flex items-center">
+                    <button
+                      className="p-1 my-2 rounded m-2 mr-4 bg-red-950 "
+                      onClick={(e) => handleStopStream(e, userInfo._id)}
+                    >
+                      {clearBtnText}
+                    </button>
+                    <p>
+                      Find more About Clear Button{" "}
+                      <a
+                        href="https://blogspot-vglu.onrender.com/blog/66c2d6f07860e6dd10cf1a5f"
+                        className="text-blue-500"
+                        target="_blank"
+                      >
+                        Here
+                      </a>
+                    </p>
+                  </span>
                 </div>
               )}
             </div>
@@ -342,6 +354,18 @@ export default function GoLive() {
       >
         Manage Your Stream
       </button>
+
+      <p className="my-10">
+        Read this Blog To Get More Information about how to start concert in
+        Musify{" "}
+        <a
+          href="https://blogspot-vglu.onrender.com/blog/66c2eaafa9b51a0498fab72e"
+          className="text-blue-500"
+          target="_blank"
+        >
+          link
+        </a>
+      </p>
     </div>
   );
 }

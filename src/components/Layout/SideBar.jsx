@@ -84,7 +84,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
         }`}
       >
         <div>
-          <div className="bg-musify-dark rounded-lg p-2 py-2">
+          <div className="bg-musify-dark rounded-lg p-2 py-4">
             <ul>
               <li className="px-2 py-2 my-2 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
@@ -118,7 +118,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               </li>
             </ul>
           </div>
-          <div className="bg-musify-dark rounded-lg p-2 py-2 mt-3">
+          <div className="bg-musify-dark rounded-lg p-2 py-4 mt-3">
             <ul>
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
@@ -173,7 +173,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               </li>
             </ul>
           </div>
-          <div className="bg-musify-dark rounded-lg p-2 py-2 mt-3">
+          <div className="bg-musify-dark rounded-lg p-2 py-4 mt-3">
             <ul>
               <li className="px-2 py-2 my-3 rounded-lg hover:bg-neutral-950 flex flex-row items-center hover:font-bold">
                 <NavLink
@@ -228,7 +228,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
               </li>
             </ul>
           </div>
-          <div className="mt-10 ml-2 relative">
+          <div className="mt-8 ml-4 relative">
             {getUser && (
               <div className="flex items-center">
                 <NavLink
@@ -247,7 +247,7 @@ const SideBar = ({ isCollapsed, toggleSidebar }) => {
                           : "https://avatars.githubusercontent.com/u/149575885?v=4"
                       }
                       alt="User Avatar"
-                      className="w-8 h-8 rounded-full object-cover mr-2"
+                      className="w-10 h-10 rounded-full object-cover mr-2"
                     />
                     {!isCollapsed && (
                       <h1 className="text-basic font-semibold">
