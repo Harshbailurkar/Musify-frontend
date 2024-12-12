@@ -6,6 +6,4 @@ const axiosInstance = axios.create({
 });
 
 export default axiosInstance;
-//http://localhost:8000
-//https://musify-backend-mzce.onrender.com
-//https://musify-backend-1.onrender.com
+
